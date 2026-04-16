@@ -1,21 +1,37 @@
+import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router";
 import DashboardLayout from "../../layouts/DashboardLayout";
 import DashboardPage from "../../pages/DashboardPage";
-import ClientsPage from "../../pages/ClientsPage";
 import SalesPage from "../../pages/SalesPage";
 import ReviewsPage from "../../pages/ReviewsPage";
-import ReportsPage from "../../pages/ReportingPage";
+import ErrorPage from "../../pages/ErrorPage";
+import { TableSkeleton } from "../../shared/components/LoadingSkeleton";
+import ClientDetailPage from "../../pages/ClientDetailPage";
+
+const ClientsPage = lazy(() => import("../../pages/clients/ClientsPage"));
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component: DashboardLayout,
+    element: <DashboardLayout />,
+    errorElement: (
+      <DashboardLayout>
+        <ErrorPage />
+      </DashboardLayout>
+    ),
     children: [
       { index: true, Component: DashboardPage },
-      { path: "clients", Component: ClientsPage },
+      {
+        path: "clients",
+        element: (
+          <Suspense fallback={<TableSkeleton />}>
+            <ClientsPage />
+          </Suspense>
+        ),
+      },
       { path: "sales", Component: SalesPage },
       { path: "reviews", Component: ReviewsPage },
-      { path: "reports", Component: ReportsPage },
+      { path: "clients/:clientId", Component: ClientDetailPage },
     ],
   },
 ]);

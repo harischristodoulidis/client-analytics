@@ -10,10 +10,13 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { Link, Outlet, useLocation } from "react-router";
+import { NavLink, Outlet } from "react-router";
 
-export default function DashboardLayout() {
-  const location = useLocation();
+interface DashboardLayoutProps {
+  children?: React.ReactNode;
+}
+
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const menuItems = [
@@ -25,9 +28,17 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex h-screen bg-[#F8FAFC] overflow-hidden">
+      {/* Mobile Overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-[240px] bg-[#0F172A] text-[#CBD5E1] flex flex-col transform transition-transform duration-300 ease-in-out ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-60 bg-[#0F172A] text-[#CBD5E1] flex flex-col transform transition-transform duration-300 ease-in-out ${
           mobileMenuOpen
             ? "translate-x-0"
             : "-translate-x-full lg:translate-x-0"
@@ -36,7 +47,7 @@ export default function DashboardLayout() {
         <div className="p-6 flex items-center justify-between">
           <h1 className="text-lg font-bold text-white">Client Analytics</h1>
           <button
-            // onClick={() => setMobileMenuOpen(false)}
+            onClick={() => setMobileMenuOpen(false)}
             className="lg:hidden p-2 hover:bg-[#1E293B] rounded-lg transition-colors"
           >
             <X className="w-5 h-5" />
@@ -45,20 +56,22 @@ export default function DashboardLayout() {
         <nav className="flex-1 px-3">
           {menuItems.map((item) => {
             const Icon = item.icon;
-            const isActive = (location.pathname = item.path);
             return (
-              <Link
+              <NavLink
                 key={item.label}
                 to={item.path}
-                className={`flex items-center gap-3 px-3 py-2 mb-1 rounded-lg transition-colors ${
-                  isActive
-                    ? "bg-[#1E293B] text-[#E2E8F0]"
-                    : "text-[#CBD5E1] hover:bg-[#1E293B]/50 hover:text-[#E2E8F0]"
-                }`}
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) => {
+                  return `flex items-center gap-3 px-3 py-2 mb-1 rounded-lg transition-colors ${
+                    isActive
+                      ? "bg-amber-800 text-[#E2E8F0]"
+                      : "text-[#CBD5E1] hover:bg-amber-800 hover:text-[#E2E8F0]"
+                  }`;
+                }}
               >
                 <Icon className="w-5 h-5" />
                 <span className="text-sm">{item.label}</span>
-              </Link>
+              </NavLink>
             );
           })}
         </nav>
@@ -98,7 +111,7 @@ export default function DashboardLayout() {
           </div>
         </header>
         <main className="flex-1 overflow-auto p-4 md:p-6">
-          <Outlet />
+          {children ?? <Outlet />}
         </main>
       </div>
     </div>
