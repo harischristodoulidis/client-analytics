@@ -1,10 +1,11 @@
 import { useActionState } from "react";
 import { X } from "lucide-react";
-import type { Client } from "../../shared/api/types/clients";
+import type { Client } from "../../../shared/api/types/clients";
 import {
   initialState,
   type AddClientFormState,
-} from "../../shared/api/types/formState";
+} from "../../../shared/api/types/formState";
+import Input from "../../ui/Input";
 
 interface ClientModalProps {
   isOpen: boolean;
@@ -51,11 +52,14 @@ export default function ClientModal({
 
   const [formState, formAction] = useActionState(addClientAction, initialState);
 
+  const labelClasses = "block text-sm font-medium mb-2";
+  const inputClasses = "px-3 py-2";
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div className="bg-background rounded-xl shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-4 md:p-6 border-b border-border">
           <h2 className="text-lg md:text-xl font-bold">
@@ -72,67 +76,61 @@ export default function ClientModal({
         {/* Form */}
         <form className="p-4 md:p-6 space-y-4" action={formAction}>
           <div>
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium mb-2"
-            >
+            <label htmlFor="username" className={labelClasses}>
               Username <span className="text-red-500">*</span>
             </label>
-            <input
+            <Input
               type="text"
               id="username"
               name="username"
               required
-              className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className={inputClasses}
               placeholder="Enter client username"
               defaultValue={client?.username}
             />
           </div>
 
           <div>
-            <label htmlFor="name" className="block text-sm font-medium mb-2">
+            <label htmlFor="name" className={labelClasses}>
               Name <span className="text-red-500">*</span>
             </label>
-            <input
+            <Input
               type="text"
               id="name"
               name="name"
               required
-              className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className={inputClasses}
               placeholder="Enter client name"
               defaultValue={client?.name}
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-2">
+            <label htmlFor="email" className={labelClasses}>
               Email <span className="text-red-500">*</span>
             </label>
-            <input
+            <Input
               type="email"
               id="email"
               name="email"
               required
-              className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className={inputClasses}
               placeholder="client@example.com"
               defaultValue={client?.email}
             />
           </div>
 
           <div>
-            <label
-              htmlFor="totalSpent"
-              className="block text-sm font-medium mb-2"
-            >
+            <label htmlFor="totalSpent" className={labelClasses}>
               Total Spent ($)
             </label>
-            <input
+            <Input
               type="number"
               id="totalSpent"
               name="totalSpent"
               min="0"
               step="0.001"
-              className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className={inputClasses}
               placeholder="0.000"
               defaultValue={client?.totalSpent}
             />

@@ -1,6 +1,6 @@
 export function TableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-border overflow-hidden">
+    <div className="bg-background rounded-xl shadow-sm border border-border overflow-hidden">
       <div className="p-4 border-b border-border">
         <div className="h-5 w-32 bg-muted rounded animate-pulse"></div>
       </div>

@@ -1,12 +1,15 @@
 import { Edit, MoreVertical, Trash2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
-interface ActionsMenuProps {
+interface ClientActionsMenuProps {
   onEdit: () => void;
   onDelete: () => void;
 }
 
-export default function ActionsMenu({ onEdit, onDelete }: ActionsMenuProps) {
+export default function ClientActionsMenu({
+  onEdit,
+  onDelete,
+}: ClientActionsMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -39,7 +42,7 @@ export default function ActionsMenu({ onEdit, onDelete }: ActionsMenuProps) {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-1 w-48 bg-white border border-border rounded-lg shadow-lg z-10 py-1">
+        <div className="absolute right-full -bottom-1/2 mt-1 w-48 bg-background border border-border rounded-lg shadow-lg z-1000 py-1">
           <button
             onClick={handleEdit}
             className="w-full px-4 py-2 text-left text-sm hover:bg-muted transition-colors flex items-center gap-2"

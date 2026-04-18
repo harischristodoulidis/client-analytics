@@ -1,5 +1,5 @@
 import { AlertTriangle } from "lucide-react";
-import type { Client } from "../../shared/api/types/clients";
+import type { Client } from "../../../shared/api/types/clients";
 
 interface DeleteConfirmModalProps {
   isOpen: boolean;
@@ -32,7 +32,7 @@ export default function DeleteConfirmModal({
         <div className="p-6">
           <div className="flex items-start gap-4">
             <div className="shrink-0 w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-              <AlertTriangle className="w-6 h-6 text-red-600" />
+              <AlertTriangle className="w-6 h-6 text-destructive" />
             </div>
             <div className="flex-1">
               <h3 className="text-lg font-semibold mb-2">Delete Client</h3>
@@ -51,13 +51,13 @@ export default function DeleteConfirmModal({
         <div className="flex items-center justify-end gap-3 px-6 py-4 bg-muted/30 border-t border-border rounded-b-xl">
           <button
             onClick={onClose}
-            className="px-4 py-2 border border-border rounded-lg text-sm font-medium hover:bg-white transition-colors"
+            className="px-4 py-2 border border-border rounded-lg text-sm font-medium cursor-pointer hover:bg-white transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleConfirm}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
+            className="px-4 py-2 bg-destructive text-white rounded-lg text-sm font-medium cursor-pointer hover:bg-red-700 transition-colors"
           >
             Delete
           </button>

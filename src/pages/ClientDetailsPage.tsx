@@ -1,14 +1,16 @@
 import { Activity, Calendar, DollarSign, Mail } from "lucide-react";
 import { useParams, Link, useLocation } from "react-router";
-import type { Client } from "../../shared/api/types/clients";
-import ClientDetailsHeader from "./ClientDetailsHeader";
-import ClientDetailsCard from "./ClientDetailsCard";
+import type { Client } from "../shared/api/types/clients";
+import ClientDetailsHeader from "../components/content/clientDetails/ClientDetailsHeader";
+import ClientDetailsCard from "../components/content/clientDetails/ClientDetailsCard";
 
 export default function ClientDetailsPage() {
   const { clientUsername } = useParams();
   const location = useLocation();
   const state = location.state ?? {};
   const client = state.client as Client;
+
+  const labelClasses = "text-sm text-muted-foreground mb-1";
 
   return (
     <div className="space-y-4 md:space-y-6">
@@ -31,7 +33,7 @@ export default function ClientDetailsPage() {
               <Mail className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Email</p>
+              <p className={labelClasses}>Email</p>
               <a
                 href={`mailto:${client.email}`}
                 className="text-sm font-medium hover:text-primary transition-colors"
@@ -46,7 +48,7 @@ export default function ClientDetailsPage() {
               <Calendar className="w-5 h-5 text-green-600" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Joined Date</p>
+              <p className={labelClasses}>Joined Date</p>
               <p className="text-sm font-medium">
                 {new Date(client.joinedDate).toLocaleDateString("en-US", {
                   year: "numeric",
@@ -65,7 +67,7 @@ export default function ClientDetailsPage() {
               <DollarSign className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Total Spent</p>
+              <p className={labelClasses}>Total Spent</p>
               <p className="text-2xl font-bold">
                 ${client.totalSpent.toLocaleString()}
               </p>
