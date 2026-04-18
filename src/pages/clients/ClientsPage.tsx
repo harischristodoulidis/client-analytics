@@ -1,20 +1,26 @@
 import { useState, useEffect, useCallback } from "react";
 import { ArrowUpDown, ArrowUp, ArrowDown, Users } from "lucide-react";
-import ClientsHeader from "./ClientsHeader";
-import ClientsFilters from "./ClientsFilters";
-import ClientsPagination from "./ClientsPagination";
-import ClientsList from "./ClientsList";
+import { addClient, editClient } from "../../shared/api/clientsApi";
 import { useClients } from "../../shared/hooks/useClients";
+import { useAddOrEditClient } from "../../shared/hooks/useAddOrEditClient";
 import useDebounse from "../../shared/hooks/useDebounce";
 import EmptyState from "../../shared/components/EmptyState";
 import { TableSkeleton } from "../../shared/components/LoadingSkeleton";
 import type { Client, ClientStatus } from "../../shared/api/types/clients";
+import ClientsHeader from "./ClientsHeader";
+import ClientsFilters from "./ClientsFilters";
+import ClientsPagination from "./ClientsPagination";
+import ClientsList from "./ClientsList";
+import ClientModal from "./ClientModal";
+import DeleteConfirmModal from "./DeleteConfirmModal";
+import { useDeleteClient } from "../../shared/hooks/useDeleteClient";
 
 const PAGE_SIZE = 10;
 type SortDirection = "asc" | "desc";
 type SortColumn = keyof Client;
 
 export default function ClientsPage() {
+  // States
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<ClientStatus>("active");
   const [page, setPage] = useState(1);
@@ -22,6 +28,12 @@ export default function ClientsPage() {
     "asc",
   );
   const [sortColumn, setSortColumn] = useState<SortColumn>("id");
+
+  // Modal states
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const debouncedSearch = useDebounse(search, 500);
 
@@ -33,6 +45,9 @@ export default function ClientsPage() {
     sort_by: sortColumn,
     order: sortDirection,
   });
+  const { mutateAsync: addAsync } = useAddOrEditClient(addClient);
+  const { mutateAsync: editAsync } = useAddOrEditClient(editClient);
+  const { mutateAsync: deleteAsync } = useDeleteClient();
 
   const clients = data?.data ?? [];
   const totalPages = data?.total_pages ?? 0;
@@ -76,9 +91,36 @@ export default function ClientsPage() {
     [],
   );
 
+  const handleAddClient = async (clientData: any) => {
+    await addAsync(clientData);
+  };
+
+  const handleEditClient = async (clientData: any) => {
+    if (selectedClient) {
+      const { id, ...rest } = clientData;
+      await editAsync({ id: selectedClient.id, ...rest });
+    }
+  };
+
+  const handleDeleteClient = async () => {
+    if (selectedClient) {
+      await deleteAsync({ id: selectedClient.id });
+    }
+  };
+
+  const openDeleteModal = (client: Client) => {
+    setSelectedClient(client);
+    setIsDeleteModalOpen(true);
+  };
+
+  const openEditModal = (client: Client) => {
+    setSelectedClient(client);
+    setIsEditModalOpen(true);
+  };
+
   return (
     <div className="space-y-4 md:space-y-6">
-      <ClientsHeader />
+      <ClientsHeader onOpenModal={() => setIsAddModalOpen(true)} />
       <ClientsFilters
         search={search}
         statusFilter={statusFilter}
@@ -95,9 +137,9 @@ export default function ClientsPage() {
             clients={clients}
             onSort={handleSort}
             onRenderSortIcon={renderSortIcon}
+            onEditClient={openEditModal}
+            onDeleteClient={openDeleteModal}
           />
-
-          {/* Pagination */}
           {totalPages && totalPages > 1 && (
             <ClientsPagination
               startIndex={startIndex}
@@ -117,6 +159,31 @@ export default function ClientsPage() {
           />
         </div>
       )}
+
+      {/* Add Client Modal */}
+      <ClientModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSave={handleAddClient}
+        mode="add"
+      />
+
+      {/* Edit Client Modal */}
+      <ClientModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSave={handleEditClient}
+        mode="edit"
+        client={selectedClient || undefined}
+      />
+
+      {/* Delete Client Modal */}
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteClient}
+        client={selectedClient || undefined}
+      />
     </div>
   );
 }

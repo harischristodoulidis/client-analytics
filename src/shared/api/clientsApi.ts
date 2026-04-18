@@ -51,3 +51,30 @@ export const fetchClients = async (
     end,
   };
 };
+
+export const addClient = async (client: Omit<Client, "id">) => {
+  const { data, error } = await supabase
+    .from("clients")
+    .insert([client])
+    .select();
+
+  if (error) throw error;
+  return data;
+};
+
+export const editClient = async ({ id, ...payload }: Client) => {
+  const { data, error } = await supabase
+    .from("clients")
+    .update(payload)
+    .eq("id", id)
+    .select();
+
+  if (error) throw error;
+  return data;
+};
+
+export const deleteClient = async ({ id }: Pick<Client, "id">) => {
+  const { error } = await supabase.from("clients").delete().eq("id", id);
+
+  if (error) throw error;
+};

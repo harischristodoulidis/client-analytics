@@ -1,7 +1,7 @@
 import { Link } from "react-router";
-import { MoreVertical } from "lucide-react";
 import type { Client } from "../../shared/api/types/clients";
 import { statusVariants } from "../../styles/variants/statusVariants";
+import ActionsMenu from "./ActionsMenu";
 
 type SortColumn = keyof Client;
 
@@ -9,12 +9,16 @@ interface ClientsListProps {
   clients: Client[];
   onSort: (column: SortColumn) => void;
   onRenderSortIcon: (column: SortColumn) => React.ReactNode;
+  onEditClient: (client: Client) => void;
+  onDeleteClient: (client: Client) => void;
 }
 
 export default function ClientsList({
   clients,
   onSort,
   onRenderSortIcon,
+  onEditClient,
+  onDeleteClient,
 }: ClientsListProps) {
   return (
     <div className="overflow-x-auto -mx-4 md:mx-0">
@@ -64,7 +68,7 @@ export default function ClientsList({
             <tr key={client.id} className="hover:bg-muted/30 transition-colors">
               <td className="px-4 md:px-6 py-3 md:py-4">{index + 1}</td>
               <td className="px-4 md:px-6 py-3 md:py-4 text-blue-800 underline">
-                <Link to={client.username}>
+                <Link to={client.username} state={{ client }}>
                   <div className="font-medium text-sm">{client.username}</div>
                 </Link>
               </td>
@@ -83,9 +87,10 @@ export default function ClientsList({
                 ${client.totalSpent.toLocaleString()}
               </td>
               <td className="px-4 md:px-6 py-3 md:py-4">
-                <button className="p-1 hover:bg-muted rounded transition-colors">
-                  <MoreVertical className="w-4 h-4 text-muted-foreground" />
-                </button>
+                <ActionsMenu
+                  onEdit={() => onEditClient(client)}
+                  onDelete={() => onDeleteClient(client)}
+                />
               </td>
             </tr>
           ))}
