@@ -27,7 +27,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   ];
 
   return (
-    <div className="flex h-screen bg-[#F8FAFC] overflow-hidden">
+    <div className="flex h-screen bg-background overflow-hidden">
       {/* Mobile Overlay */}
       {mobileMenuOpen && (
         <div
@@ -38,7 +38,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-60 bg-[#0F172A] text-[#CBD5E1] flex flex-col transform transition-transform duration-300 ease-in-out ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-60 bg-sidebar text-sidebar-foreground flex flex-col transform transition-transform duration-300 ease-in-out ${
           mobileMenuOpen
             ? "translate-x-0"
             : "-translate-x-full lg:translate-x-0"
@@ -48,7 +48,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <h1 className="text-lg font-bold text-white">Client Analytics</h1>
           <button
             onClick={() => setMobileMenuOpen(false)}
-            className="lg:hidden p-2 hover:bg-[#1E293B] rounded-lg transition-colors"
+            className="lg:hidden p-2 hover:bg-sidebar-accent rounded-lg transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -64,8 +64,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 className={({ isActive }) => {
                   return `flex items-center gap-3 px-3 py-2 mb-1 rounded-lg transition-colors ${
                     isActive
-                      ? "bg-amber-800 text-[#E2E8F0]"
-                      : "text-[#CBD5E1] hover:bg-amber-800 hover:text-[#E2E8F0]"
+                      ? "bg-amber-800 text-sidebar-accent-foreground"
+                      : "text-[#CBD5E1] hover:bg-amber-800 hover:text-sidebar-accent-foreground"
                   }`;
                 }}
               >

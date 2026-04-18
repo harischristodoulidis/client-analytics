@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { Search } from "lucide-react";
-import type { ClientStatus } from "../../shared/api/types/clients";
+import type { ClientStatus } from "../../../shared/api/types/clients";
+import Input from "../../ui/Input";
 
 interface ClientsFIltersProps {
   search: string;
@@ -16,15 +17,15 @@ const ClientsFilters = memo(function ClientsFilters({
   onChangeStatus,
 }: ClientsFIltersProps) {
   return (
-    <div className="bg-white rounded-xl p-3 md:p-4 shadow-sm border border-border flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4">
+    <div className="bg-background rounded-xl p-3 md:p-4 shadow-sm border border-border flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4">
       <div className="flex-1 relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        <input
+        <Input
           type="text"
           placeholder="Search clients..."
           value={search}
           onChange={onSearch}
-          className="pl-10 pr-4 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 w-full"
+          className="pl-10 pr-4 py-2"
         />
       </div>
       <select

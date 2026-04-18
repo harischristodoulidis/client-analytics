@@ -1,19 +1,19 @@
 import { useState, useEffect, useCallback } from "react";
 import { ArrowUpDown, ArrowUp, ArrowDown, Users } from "lucide-react";
-import { addClient, editClient } from "../../shared/api/clientsApi";
-import { useClients } from "../../shared/hooks/useClients";
-import { useAddOrEditClient } from "../../shared/hooks/useAddOrEditClient";
-import useDebounse from "../../shared/hooks/useDebounce";
-import EmptyState from "../../shared/components/EmptyState";
-import { TableSkeleton } from "../../shared/components/LoadingSkeleton";
-import type { Client, ClientStatus } from "../../shared/api/types/clients";
-import ClientsHeader from "./ClientsHeader";
-import ClientsFilters from "./ClientsFilters";
-import ClientsPagination from "./ClientsPagination";
-import ClientsList from "./ClientsList";
-import ClientModal from "./ClientModal";
-import DeleteConfirmModal from "./DeleteConfirmModal";
-import { useDeleteClient } from "../../shared/hooks/useDeleteClient";
+import { addClient, editClient } from "../shared/api/clientsApi";
+import { useClients } from "../shared/hooks/useClients";
+import { useAddOrEditClient } from "../shared/hooks/useAddOrEditClient";
+import useDebounse from "../shared/hooks/useDebounce";
+import EmptyState from "../shared/components/EmptyState";
+import { TableSkeleton } from "../shared/components/LoadingSkeleton";
+import type { Client, ClientStatus } from "../shared/api/types/clients";
+import ClientsHeader from "../components/content/clients/ClientsHeader";
+import ClientsFilters from "../components/content/clients/ClientsFilters";
+import ClientsPagination from "../components/content/clients/ClientsPagination";
+import ClientsList from "../components/content/clients/ClientsList";
+import ClientModal from "../components/content/clients/ClientModal";
+import DeleteConfirmModal from "../components/content/clients/DeleteConfirmModal";
+import { useDeleteClient } from "../shared/hooks/useDeleteClient";
 
 const PAGE_SIZE = 10;
 type SortDirection = "asc" | "desc";
@@ -35,8 +35,8 @@ export default function ClientsPage() {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+  // Custom hooks
   const debouncedSearch = useDebounse(search, 500);
-
   const { data, isLoading } = useClients({
     page,
     page_size: PAGE_SIZE,
