@@ -1,5 +1,5 @@
-import type { Client, PaginatedResponse, ClientStatus } from "./types/clients";
 import { supabase } from "../utils/supabase";
+import type { Client, PaginatedResponse, ClientStatus } from "./types/clients";
 
 export interface ClientParams {
   page: number;
