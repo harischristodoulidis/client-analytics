@@ -1,9 +1,15 @@
 import { Link } from "react-router";
 import type { Client } from "../../../shared/api/types/clients";
-import { statusVariants } from "../../../styles/variants/statusVariants";
+import { clientStatusVariants } from "../../../styles/variants/clientStatusVariants";
 import ClientActionsMenu from "./ClientActionsMenu";
 
 type SortColumn = keyof Client;
+
+const thClasses =
+  "text-left px-4 md:px-6 py-2 md:py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider";
+const thWithFilterClasses =
+  "cursor-pointer hover:bg-muted/70 transition-colors";
+const tdClasses = "px-4 md:px-6 py-3 md:py-4";
 
 interface ClientsListProps {
   clients: Client[];
@@ -20,12 +26,6 @@ export default function ClientsList({
   onEditClient,
   onDeleteClient,
 }: ClientsListProps) {
-  const thClasses =
-    "text-left px-4 md:px-6 py-2 md:py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider";
-  const thWithFilterClasses =
-    "cursor-pointer hover:bg-muted/70 transition-colors";
-  const tdClasses = "px-4 md:px-6 py-3 md:py-4";
-
   return (
     <div className="overflow-x-auto -mx-4 md:mx-0">
       <table className="w-full min-w-175">
@@ -53,11 +53,11 @@ export default function ClientsList({
             <th className={thClasses}>Status</th>
             <th
               className={`${thClasses} ${thWithFilterClasses}`}
-              onClick={() => onSort("totalSpent")}
+              onClick={() => onSort("total_spent")}
             >
               <div className="flex items-center gap-1 md:gap-2">
                 <span>Expenses</span>
-                {onRenderSortIcon("totalSpent")}
+                {onRenderSortIcon("total_spent")}
               </div>
             </th>
             <th className={thClasses}>Actions</th>
@@ -69,8 +69,8 @@ export default function ClientsList({
               <td className={tdClasses}>
                 <span>{index + 1}</span>
               </td>
-              <td className={`${tdClasses}`}>
-                <span className="text-blue-800 underline">
+              <td className={tdClasses}>
+                <span className="text-link underline">
                   <Link to={client.username} state={{ client }}>
                     <div className="font-medium text-sm">{client.username}</div>
                   </Link>
@@ -81,7 +81,7 @@ export default function ClientsList({
               </td>
               <td className={tdClasses}>
                 <span
-                  className={`inline-flex px-2 py-1 text-xs font-medium rounded-md ${statusVariants[client.status]},
+                  className={`inline-flex px-2 py-1 text-xs font-medium rounded-md ${clientStatusVariants[client.status]},
                         )}`}
                 >
                   {client.status}
@@ -89,7 +89,7 @@ export default function ClientsList({
               </td>
               <td className={tdClasses}>
                 <span className="font-medium text-sm">
-                  ${client.totalSpent.toLocaleString()}
+                  ${client.total_spent.toLocaleString()}
                 </span>
               </td>
               <td className={tdClasses}>

@@ -12,7 +12,7 @@ import ClientsFilters from "../components/content/clients/ClientsFilters";
 import ClientsPagination from "../components/content/clients/ClientsPagination";
 import ClientsList from "../components/content/clients/ClientsList";
 import ClientModal from "../components/content/clients/ClientModal";
-import DeleteConfirmModal from "../components/content/clients/DeleteConfirmModal";
+import ConfirmModal from "../components/ui/ConfirmModal";
 import { useDeleteClient } from "../shared/hooks/useDeleteClient";
 
 const PAGE_SIZE = 10;
@@ -108,14 +108,14 @@ export default function ClientsPage() {
     }
   };
 
-  const openDeleteModal = (client: Client) => {
-    setSelectedClient(client);
-    setIsDeleteModalOpen(true);
-  };
-
   const openEditModal = (client: Client) => {
     setSelectedClient(client);
     setIsEditModalOpen(true);
+  };
+
+  const openDeleteModal = (client: Client) => {
+    setSelectedClient(client);
+    setIsDeleteModalOpen(true);
   };
 
   return (
@@ -132,7 +132,7 @@ export default function ClientsPage() {
       {isLoading ? (
         <TableSkeleton />
       ) : clients.length > 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border border-border overflow-hidden">
+        <div className="bg-background rounded-xl shadow-sm border border-border overflow-hidden">
           <ClientsList
             clients={clients}
             onSort={handleSort}
@@ -178,11 +178,22 @@ export default function ClientsPage() {
       />
 
       {/* Delete Client Modal */}
-      <DeleteConfirmModal
+      <ConfirmModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleDeleteClient}
-        client={selectedClient || undefined}
+        confirmHeading="Delete Client"
+        confirmParagraph={
+          <p className="text-sm text-muted-foreground">
+            Are you sure you want to delete{" "}
+            <span className="font-medium text-foreground">
+              {selectedClient?.name}
+            </span>
+            ? This action cannot be undone.
+          </p>
+        }
+        confirmColor="red"
+        confirmButtonText="Delete"
       />
     </div>
   );

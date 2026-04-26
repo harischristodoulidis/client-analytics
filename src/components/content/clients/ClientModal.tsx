@@ -35,13 +35,13 @@ export default function ClientModal({
       username,
       name,
       email,
-      totalSpent: totalSpent ? parseFloat(totalSpent) : 0,
+      total_spent: totalSpent ? parseFloat(totalSpent) : 0,
       status: mode === "add" ? ("active" as const) : client!.status,
       joinedDate: new Date().toISOString().split("T")[0],
     };
 
     try {
-      onSave(payload);
+      await onSave(payload);
       onClose();
 
       return { success: true, error: null };
@@ -131,8 +131,8 @@ export default function ClientModal({
               min="0"
               step="0.001"
               className={inputClasses}
-              placeholder="0.000"
-              defaultValue={client?.totalSpent}
+              placeholder="0.00"
+              defaultValue={client?.total_spent}
             />
           </div>
 

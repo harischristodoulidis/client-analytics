@@ -1,10 +1,12 @@
+export type ClientStatus = "all" | "active" | "inactive" | "pending";
+
 export interface Client {
   id: string;
   name: string;
   username: string;
   email: string;
-  status: "active" | "inactive" | "pending";
-  totalSpent: number;
+  status: ClientStatus;
+  total_spent: number;
   joinedDate: string;
 }
 
@@ -17,5 +19,3 @@ export interface PaginatedResponse<T> {
   start: number;
   end: number;
 }
-
-export type ClientStatus = "all" | "active" | "inactive" | "pending";

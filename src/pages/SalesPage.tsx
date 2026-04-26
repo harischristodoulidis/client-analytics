@@ -1,3 +1,104 @@
+import { useState } from "react";
+import type {
+  ClientWithSale,
+  Sale,
+  SalesWithClient,
+} from "../shared/api/types/sales";
+import { useAddOrEditSale } from "../shared/hooks/useAddOrEditSale";
+import { addSale, editSale } from "../shared/api/salesApi";
+import { useDeleteSale } from "../shared/hooks/useDeleteSale";
+import SaleModal from "../components/content/sales/SaleModal";
+import SalesChart from "../components/content/sales/SalesChart";
+import SalesHeader from "../components/content/sales/SalesHeader";
+import SalesList from "../components/content/sales/SalesList";
+import ConfirmModal from "../components/ui/ConfirmModal";
+
 export default function SalesPage() {
-  return <h2>Sales Page</h2>;
+  // States
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedSale, setSelectedSale] = useState<SalesWithClient | null>(
+    null,
+  );
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  // Mutates
+  const { mutateAsync: addAsync } = useAddOrEditSale(addSale);
+  const { mutateAsync: editsync } = useAddOrEditSale(editSale);
+  const { mutateAsync: deleteAsync } = useDeleteSale();
+
+  const handleAddSale = async (saleData: any) => {
+    await addAsync(saleData);
+  };
+
+  const handleEditSale = async (saleData: any) => {
+    if (selectedSale) {
+      const { id, ...rest } = saleData;
+      await editsync({ id: selectedSale.id, ...rest });
+    }
+  };
+
+  const handleDeleteSale = async () => {
+    if (selectedSale) {
+      await deleteAsync({ id: selectedSale.id });
+    }
+  };
+
+  const openEditModal = (sale: SalesWithClient) => {
+    setSelectedSale(sale);
+    setIsEditModalOpen(true);
+  };
+
+  const openDeleteModal = (sale: SalesWithClient) => {
+    setSelectedSale(sale);
+    setIsDeleteModalOpen(true);
+  };
+
+  return (
+    <div className="space-y-4 md:space-y-6">
+      <SalesHeader onOpenModal={() => setIsAddModalOpen(true)} />
+      <SalesChart />
+      <SalesList onEditSale={openEditModal} onDeleteSale={openDeleteModal} />
+
+      {/* Add Sale Modal */}
+      <SaleModal
+        isOpen={isAddModalOpen}
+        mode="add"
+        onSave={handleAddSale}
+        onClose={() => setIsAddModalOpen(false)}
+      />
+
+      {/* Edit Sale Modal */}
+      <SaleModal
+        isOpen={isEditModalOpen}
+        mode="edit"
+        onSave={handleEditSale}
+        onClose={() => setIsEditModalOpen(false)}
+        sale={selectedSale || undefined}
+        client={
+          selectedSale
+            ? ({
+                id: selectedSale.client_id,
+                name: selectedSale.clients.name,
+                username: selectedSale.clients.username,
+                email: selectedSale.clients.email,
+                total_spent: selectedSale.clients.total_spent,
+                joinedDate: selectedSale.clients.joinedDate,
+              } as ClientWithSale)
+            : undefined
+        }
+      />
+
+      {/* Delete Client Modal */}
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteSale}
+        confirmHeading="Delete Transaction"
+        confirmParagraph="Are you sure you want to delete this transaction? This action cannot be undone."
+        confirmColor="red"
+        confirmButtonText="Delete"
+      />
+    </div>
+  );
 }

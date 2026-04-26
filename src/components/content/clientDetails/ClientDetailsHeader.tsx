@@ -1,5 +1,5 @@
 import type { Client } from "../../../shared//api/types/clients";
-import { statusVariants } from "../../../styles/variants/statusVariants";
+import { clientStatusVariants } from "../../../styles/variants/clientStatusVariants";
 
 interface ClientDetailsHeaderProps {
   username?: string;
@@ -19,7 +19,7 @@ export default function ClientDetailsHeader({
           </h1>
           <div className="flex items-center gap-2">
             <span
-              className={`inline-flex px-3 py-1 text-sm font-medium rounded-md ${statusVariants[client.status]}`}
+              className={`inline-flex px-3 py-1 text-sm font-medium rounded-md ${clientStatusVariants[client.status]}`}
             >
               {client.status}
             </span>
