@@ -7,6 +7,7 @@ import ReviewsPage from "../../pages/ReviewsPage";
 import ErrorPage from "../../pages/ErrorPage";
 import { TableSkeleton } from "../../shared/components/LoadingSkeleton";
 import ClientDetailsPage from "../../pages/ClientDetailsPage";
+import TransactionDetailsPage from "../../pages/TransactionDetailsPage";
 
 const ClientsPage = lazy(() => import("../../pages/ClientsPage"));
 
@@ -32,6 +33,7 @@ export const router = createBrowserRouter([
       { path: "sales", Component: SalesPage },
       { path: "reviews", Component: ReviewsPage },
       { path: "clients/:clientUsername", Component: ClientDetailsPage },
+      { path: "sales/:index", Component: TransactionDetailsPage },
     ],
   },
 ]);

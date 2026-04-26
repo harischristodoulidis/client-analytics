@@ -1,18 +1,41 @@
 import { AlertTriangle } from "lucide-react";
-import type { Client } from "../../../shared/api/types/clients";
 
 interface DeleteConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => Promise<void>;
-  client?: Client;
+  confirmHeading: string;
+  confirmParagraph: string | React.ReactNode;
+  confirmColor: string;
+  confirmButtonText: string;
 }
 
-export default function DeleteConfirmModal({
+const colorClasses: Record<
+  string,
+  { bgIcon: string; bg: string; text: string; hover: string }
+> = {
+  red: {
+    bgIcon: "bg-red-100",
+    bg: "bg-red-800",
+    text: "text-red-700",
+    hover: "hover:bg-red-700",
+  },
+  yellow: {
+    bgIcon: "bg-yellow-100",
+    bg: "bg-yellow-800",
+    text: "text-yellow-700",
+    hover: "hover:bg-yellow-700",
+  },
+};
+
+export default function ConfirmModal({
   isOpen,
   onClose,
   onConfirm,
-  client,
+  confirmHeading,
+  confirmParagraph,
+  confirmColor,
+  confirmButtonText,
 }: DeleteConfirmModalProps) {
   const handleConfirm = () => {
     try {
@@ -31,17 +54,17 @@ export default function DeleteConfirmModal({
         {/* Content */}
         <div className="p-6">
           <div className="flex items-start gap-4">
-            <div className="shrink-0 w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-              <AlertTriangle className="w-6 h-6 text-destructive" />
+            <div
+              className={`shrink-0 w-12 h-12 rounded-full ${colorClasses[confirmColor].bgIcon} flex items-center justify-center`}
+            >
+              <AlertTriangle
+                className={`w-6 h-6 ${colorClasses[confirmColor].text}`}
+              />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold mb-2">Delete Client</h3>
+              <h3 className="text-lg font-semibold mb-2">{confirmHeading}</h3>
               <p className="text-sm text-muted-foreground">
-                Are you sure you want to delete{" "}
-                <span className="font-medium text-foreground">
-                  {client?.name}
-                </span>
-                ? This action cannot be undone.
+                {confirmParagraph}
               </p>
             </div>
           </div>
@@ -57,9 +80,9 @@ export default function DeleteConfirmModal({
           </button>
           <button
             onClick={handleConfirm}
-            className="px-4 py-2 bg-destructive text-white rounded-lg text-sm font-medium cursor-pointer hover:bg-red-700 transition-colors"
+            className={`px-4 py-2 ${colorClasses[confirmColor].bg} text-white rounded-lg text-sm font-medium cursor-pointer ${colorClasses[confirmColor].hover} transition-colors`}
           >
-            Delete
+            {confirmButtonText}
           </button>
         </div>
       </div>

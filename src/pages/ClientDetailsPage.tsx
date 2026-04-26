@@ -1,5 +1,5 @@
 import { Activity, Calendar, DollarSign, Mail } from "lucide-react";
-import { useParams, Link, useLocation } from "react-router";
+import { useParams, useLocation, useNavigate } from "react-router";
 import type { Client } from "../shared/api/types/clients";
 import ClientDetailsHeader from "../components/content/clientDetails/ClientDetailsHeader";
 import ClientDetailsCard from "../components/content/clientDetails/ClientDetailsCard";
@@ -7,6 +7,7 @@ import ClientDetailsCard from "../components/content/clientDetails/ClientDetails
 export default function ClientDetailsPage() {
   const { clientUsername } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const state = location.state ?? {};
   const client = state.client as Client;
 
@@ -15,13 +16,12 @@ export default function ClientDetailsPage() {
   return (
     <div className="space-y-4 md:space-y-6">
       {/* Back Button */}
-      <Link
-        to=".."
-        relative="path"
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+      <button
+        onClick={() => navigate(-1)}
+        className="inline-flex items-center gap-2 text-sm text-muted-foreground cursor-pointer hover:text-foreground transition-colors"
       >
         Go Back
-      </Link>
+      </button>
       <ClientDetailsHeader username={clientUsername} client={client} />
 
       {/* Details Grid */}
@@ -69,7 +69,7 @@ export default function ClientDetailsPage() {
             <div>
               <p className={labelClasses}>Total Spent</p>
               <p className="text-2xl font-bold">
-                ${client.totalSpent.toLocaleString()}
+                ${client.total_spent ? client.total_spent.toLocaleString() : 0}
               </p>
             </div>
           </div>

@@ -30,7 +30,7 @@ export const fetchClients = async (
     .order(sort_by, { ascending: order === "asc" })
     .range(start, end);
   if (search) {
-    query = query.ilike("name", `%${search}%`);
+    query = query.or(`name.ilike.%${search}%,username.ilike.%${search}%`);
   }
 
   if (status !== "all") {
@@ -77,4 +77,19 @@ export const deleteClient = async ({ id }: Pick<Client, "id">) => {
   const { error } = await supabase.from("clients").delete().eq("id", id);
 
   if (error) throw error;
+};
+
+export const getClientByName = async (params: {
+  search: string;
+}): Promise<Client[]> => {
+  const { search } = params;
+  const { data, error } = await supabase
+    .from("clients")
+    .select("*", { count: "exact" })
+    .eq("status", "active")
+    .or(`name.ilike.${search}%,username.ilike.${search}%`);
+
+  if (error) throw new Error(error.message);
+
+  return data;
 };
