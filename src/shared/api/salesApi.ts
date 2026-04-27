@@ -7,7 +7,7 @@ export const fetchRecentSales = async (
   const { data, error } = await supabase
     .from("sales")
     .select(`*, clients(name, username, email, total_spent, joinedDate)`)
-    .order("date", { ascending: false })
+    .order("edited_at", { ascending: false })
     .limit(limit);
 
   if (error) throw error;
@@ -24,7 +24,7 @@ export const addSale = async (sale: Omit<Sale, "id" | "created_at">) => {
 export const editSale = async ({ id, ...payload }: Sale) => {
   const { data, error } = await supabase
     .from("sales")
-    .update(payload)
+    .update({ ...payload, edited_at: new Date().toISOString() })
     .eq("id", id)
     .select();
 

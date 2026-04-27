@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { DateRange } from "react-day-picker";
 import { format } from "date-fns";
 import {
   Select,
@@ -47,8 +48,6 @@ interface PeriodSelectorProps {
   onChange: (value: PeriodOption) => void;
   customDateRange?: { from: Date; to: Date };
   onCustomDateChange?: (range: { from: Date; to: Date }) => void;
-  minDate?: Date;
-  maxDate?: Date;
 }
 
 export default function PeriodSelector({
@@ -56,14 +55,11 @@ export default function PeriodSelector({
   onChange,
   customDateRange,
   onCustomDateChange,
-  minDate,
-  maxDate,
 }: PeriodSelectorProps) {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({
-    from: customDateRange?.from,
-    to: customDateRange?.to,
-  });
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(
+    customDateRange,
+  );
 
   const handleSelectChange = (newValue: string) => {
     onChange(newValue as PeriodOption);
@@ -81,13 +77,17 @@ export default function PeriodSelector({
     return displayValue;
   };
 
-  const handleDateSelect = (range: { from?: Date; to?: Date } | undefined) => {
-    if (range?.from && range?.to) {
+  const handleDateSelect = (range: DateRange | undefined) => {
+    if (
+      range?.from &&
+      range?.to &&
+      range.from.getTime() !== range.to.getTime()
+    ) {
       setDateRange(range);
       onCustomDateChange?.({ from: range.from, to: range.to });
       setIsCalendarOpen(false);
       onChange("custom");
-    } else if (range) {
+    } else {
       setDateRange(range);
     }
   };
@@ -95,7 +95,7 @@ export default function PeriodSelector({
   return (
     <div className="flex items-center gap-2">
       <Select value={selectedPeriod} onValueChange={handleSelectChange}>
-        <SelectTrigger className="w-45 md:w-50">
+        <SelectTrigger className="w-auto min-w-45 md:min-w-50">
           <SelectValue>{getDisplayValue()}</SelectValue>
         </SelectTrigger>
         <SelectContent>
@@ -129,11 +129,11 @@ export default function PeriodSelector({
               onSelect={handleDateSelect}
               numberOfMonths={2}
               disabled={(date) => {
-                if (minDate && date < minDate) return true;
-                if (maxDate && date > maxDate) return true;
-                return false;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                return date > today;
               }}
-              defaultMonth={dateRange.from}
+              defaultMonth={dateRange?.from}
             ></Calendar>
           </PopoverContent>
         </Popover>

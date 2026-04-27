@@ -1,5 +1,4 @@
-import { useMemo, useState } from "react";
-import { getDataDateRange } from "../shared/api/revenueApi";
+import { useState } from "react";
 import PeriodSelector, {
   type PeriodOption,
 } from "../components/content/dashboard/PeriodSelector";
@@ -17,8 +16,6 @@ export default function DashboardPage() {
       ? customDateRange
       : selectedPeriod;
 
-  const dateRange = useMemo(() => getDataDateRange(), []);
-
   return (
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -28,8 +25,6 @@ export default function DashboardPage() {
           onChange={setSelectedPeriod}
           customDateRange={customDateRange}
           onCustomDateChange={setCustomDateRange}
-          minDate={dateRange.minDate}
-          maxDate={dateRange.maxDate}
         />
       </div>
       <KPIs period={period} />

@@ -5,8 +5,6 @@ import {
   LayoutDashboard,
   Menu,
   Search,
-  Star,
-  User,
   Users,
   X,
 } from "lucide-react";
@@ -23,7 +21,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { path: "/", label: "Dashboard", icon: LayoutDashboard },
     { path: "/clients", label: "Clients", icon: Users },
     { path: "/sales", label: "Sales", icon: DollarSign },
-    { path: "/reviews", label: "Reviews", icon: Star },
   ];
 
   return (
@@ -94,11 +91,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </button>
             <button className="p-2 hover:bg-muted rounded-lg transition-colors">
               <Bell className="w-5 h-5 text-muted-foreground" />
-            </button>
-            <button className="p-2 hover:bg-muted rounded-lg transition-colors">
-              <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
-                <User className="w-5 h-5" />
-              </div>
             </button>
           </div>
         </header>

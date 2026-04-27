@@ -7,6 +7,7 @@ export interface Sale {
   date: string;
   status: SaleStatus;
   created_at?: string;
+  edited_at?: string;
 }
 
 export interface SalesWithClient extends Sale {

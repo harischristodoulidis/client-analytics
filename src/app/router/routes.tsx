@@ -3,7 +3,6 @@ import { createBrowserRouter } from "react-router";
 import DashboardLayout from "../../layouts/DashboardLayout";
 import DashboardPage from "../../pages/DashboardPage";
 import SalesPage from "../../pages/SalesPage";
-import ReviewsPage from "../../pages/ReviewsPage";
 import ErrorPage from "../../pages/ErrorPage";
 import { TableSkeleton } from "../../shared/components/LoadingSkeleton";
 import ClientDetailsPage from "../../pages/ClientDetailsPage";
@@ -31,7 +30,6 @@ export const router = createBrowserRouter([
         ),
       },
       { path: "sales", Component: SalesPage },
-      { path: "reviews", Component: ReviewsPage },
       { path: "clients/:clientUsername", Component: ClientDetailsPage },
       { path: "sales/:index", Component: TransactionDetailsPage },
     ],

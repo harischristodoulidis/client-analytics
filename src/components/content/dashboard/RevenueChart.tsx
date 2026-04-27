@@ -15,6 +15,10 @@ interface RevenueChartProps {
 
 export default function RevenueChart({ period }: RevenueChartProps) {
   const { data: revenueData } = useRevenueData(period);
+  const isDaily = period === "1m" || typeof period === "object";
+  const xAxisInterval = isDaily
+    ? Math.max(0, Math.floor((revenueData?.length ?? 0) / 6) - 1)
+    : 0;
 
   return (
     <div className="bg-background rounded-xl p-4 md:p-6 shadow-sm border border-border">
@@ -26,7 +30,7 @@ export default function RevenueChart({ period }: RevenueChartProps) {
           <ResponsiveContainer width="100%" height={250} className="md:h-75">
             <LineChart
               data={revenueData}
-              margin={{ top: 5, right: 10, left: -20, bottom: 5 }}
+              margin={{ top: 5, right: 30, left: -20, bottom: 5 }}
             >
               <CartesianGrid
                 strokeDasharray="3 3"
@@ -34,7 +38,11 @@ export default function RevenueChart({ period }: RevenueChartProps) {
                 horizontal={true}
                 vertical={true}
               />
-              <XAxis dataKey="month" tick={{ fontSize: 11 }} />
+              <XAxis
+                dataKey="month"
+                tick={{ fontSize: 11 }}
+                interval={xAxisInterval}
+              />
               <YAxis tick={{ fontSize: 11 }} />
               <Tooltip
                 contentStyle={{

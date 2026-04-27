@@ -15,6 +15,7 @@ interface Payload {
   amount: number;
   status: SaleStatus;
   date: string;
+  edited_at: string;
 }
 
 interface SaleModalProps {
@@ -35,13 +36,14 @@ export default function SaleModal({
   client,
 }: SaleModalProps) {
   // States
-  const [searchClient, setSearchClient] = useState("");
+  const [searchClient, setSearchClient] = useState(""); // display value only
+  const [searchQuery, setSearchQuery] = useState(""); // drives API call
   const [clientId, setClientId] = useState<string | null>(null);
   const [amount, setAmount] = useState<number | null>(null);
   const [error, setError] = useState("");
 
   // Custom hooks
-  const debouncedSearch = useDebounse(searchClient, 500);
+  const debouncedSearch = useDebounse(searchQuery, 500);
   const { data: clients, isLoading: clientsLoading } = useGetClientByName({
     search: debouncedSearch,
   });
@@ -60,6 +62,7 @@ export default function SaleModal({
   const handleClientSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setSearchClient(e.target.value);
+    setSearchQuery(e.target.value);
   };
 
   const handleSelectClient = (
@@ -89,8 +92,10 @@ export default function SaleModal({
       amount: amount,
       status: "pending",
       date: new Date().toISOString().split("T")[0],
+      edited_at: new Date().toISOString(),
     });
     setSearchClient("");
+    setSearchQuery("");
     setClientId(null);
     setAmount(null);
     onClose();
@@ -152,7 +157,7 @@ export default function SaleModal({
               onChange={handleClientSearch}
             />
             {clientsLoading && <p>Loading clients...</p>}
-            {searchClient && clients && (
+            {searchClient && searchQuery && clients && (
               <div className="mt-2">{selectClientContent(clients)}</div>
             )}
           </div>
