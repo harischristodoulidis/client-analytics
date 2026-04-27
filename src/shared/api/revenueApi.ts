@@ -7,6 +7,7 @@ import {
   subYears,
   isWithinInterval,
   eachMonthOfInterval,
+  eachDayOfInterval,
   format,
 } from "date-fns";
 
@@ -84,23 +85,25 @@ const generateRevenueData = (): Array<{ date: Date; revenue: number }> => {
 
 const allRevenueData = generateRevenueData();
 
-export const fetchKPIs = async (
-  period: string | { from: Date; to: Date },
-): Promise<KPIData[]> => {
-  const { data, error } = await supabase
-    .from("kpis")
-    .select("*", { count: "exact" });
-
-  if (error) throw new Error(error.message);
-  return data;
+const generateDailyRevenueData = (): Array<{ date: Date; revenue: number }> => {
+  const endDate = new Date();
+  const startDate = subYears(endDate, 2);
+  return eachDayOfInterval({ start: startDate, end: endDate }).map((day) => ({
+    date: day,
+    revenue: Math.round(100 + Math.random() * 200),
+  }));
 };
+
+const allDailyRevenueData = generateDailyRevenueData();
 
 // Mock KPI data
 export const fetchMockKPIs = (
   period: string | { from: Date; to: Date } = "1y",
 ): Promise<KPIData[]> => {
   const filter = getPeriodFilter(period);
-  const periodData = filterRevenueByPeriod(allRevenueData, filter);
+  const sourceData =
+    typeof period === "object" ? allDailyRevenueData : allRevenueData;
+  const periodData = filterRevenueByPeriod(sourceData, filter);
 
   const totalRevenue = periodData.reduce((sum, item) => sum + item.revenue, 0);
   const salesCount = periodData.length * 340;
@@ -144,10 +147,24 @@ export const fetchMockKPIs = (
 export const fetchRevenueData = async (
   period: string | { from: Date; to: Date } = "1y",
 ): Promise<ChartDataPoint[]> => {
-  const filter = getPeriodFilter(period);
-  const periodData = filterRevenueByPeriod(allRevenueData, filter);
+  if (period === "1m") {
+    const filter = getPeriodFilter(period);
+    return filterRevenueByPeriod(allDailyRevenueData, filter).map((item) => ({
+      month: format(item.date, "MMM dd"),
+      revenue: item.revenue,
+    }));
+  }
 
-  return periodData.map((item) => ({
+  if (typeof period === "object") {
+    const filter: PeriodFilter = { startDate: period.from, endDate: period.to };
+    return filterRevenueByPeriod(allDailyRevenueData, filter).map((item) => ({
+      month: format(item.date, "MMM dd"),
+      revenue: item.revenue,
+    }));
+  }
+
+  const filter = getPeriodFilter(period);
+  return filterRevenueByPeriod(allRevenueData, filter).map((item) => ({
     month: format(item.date, "MMM yyyy"),
     revenue: item.revenue,
   }));
