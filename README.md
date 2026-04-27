@@ -9,22 +9,21 @@ A business analytics dashboard for managing clients, tracking sales, and monitor
 - **Client Details** — Per-client detail view with contact info, financial summary, and recent activity
 - **Sales** — Sales list with a revenue bar chart and full CRUD for transactions; each sale is linked to a client
 - **Transaction Details** — Individual transaction detail view
-- **Reviews** — Placeholder page (in progress)
 
 ## Tech Stack
 
-| Category | Library |
-|---|---|
-| Framework | React 19 + TypeScript |
-| Build | Vite 8 |
-| Routing | React Router 7 |
-| Server state | TanStack Query v5 |
-| Backend / DB | Supabase (PostgreSQL) |
-| Charts | Recharts |
-| UI primitives | Radix UI (Popover, Select) |
-| Styling | Tailwind CSS v4, CVA |
+| Category       | Library                    |
+| -------------- | -------------------------- |
+| Framework      | React 19 + TypeScript      |
+| Build          | Vite 8                     |
+| Routing        | React Router 7             |
+| Server state   | TanStack Query v5          |
+| Backend / DB   | Supabase (PostgreSQL)      |
+| Charts         | Recharts                   |
+| UI primitives  | Radix UI (Popover, Select) |
+| Styling        | Tailwind CSS v4, CVA       |
 | Date utilities | date-fns, react-day-picker |
-| Icons | Lucide React |
+| Icons          | Lucide React               |
 
 ## Project Structure
 
@@ -42,7 +41,6 @@ src/
 │   ├── ClientDetailsPage.tsx
 │   ├── SalesPage.tsx
 │   ├── TransactionDetailsPage.tsx
-│   ├── ReviewsPage.tsx
 │   └── ErrorPage.tsx
 ├── components/
 │   ├── content/                 # Feature-specific components
