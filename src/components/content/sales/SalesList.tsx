@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import type {
   ClientWithSale,
@@ -9,6 +10,7 @@ import { TableSkeleton } from "../../../shared/components/LoadingSkeleton";
 import { salesStatusVariants } from "../../../styles/variants/transactionStatusVariants";
 import SaleActionsMenu from "./SaleActionsMenu";
 import Button from "../../ui/Button";
+import LoadMore from "./LoadMore";
 
 const thClasses =
   "text-left px-4 md:px-6 py-2 md:py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider";
@@ -19,12 +21,54 @@ interface SalesListProps {
   onDeleteSale: (sale: SalesWithClient) => void;
 }
 
+const STEP = 5;
+
 export default function SalesList({
   onEditSale,
   onDeleteSale,
 }: SalesListProps) {
-  const { data: sales, isLoading } = useFetchSales(5);
+  const [offset, setOffset] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cooldownRef = useRef(false);
+
+  const { data: sales, isLoading } = useFetchSales(STEP + 1, offset);
   const navigate = useNavigate();
+
+  const visibleSales = sales?.slice(0, STEP);
+  const hasMore = (sales?.length ?? 0) > STEP;
+  const hasPrev = offset > 0;
+
+  const changePage = (direction: 1 | -1) => {
+    if (cooldownRef.current) return;
+    if (direction === 1 && !hasMore) return;
+    if (direction === -1 && !hasPrev) return;
+
+    cooldownRef.current = true;
+    setOffset((prev) => prev + direction * STEP);
+
+    setTimeout(() => {
+      cooldownRef.current = false;
+    }, 600);
+  };
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      if (cooldownRef.current) return;
+      if (e.deltaY > 0 && hasMore) {
+        e.preventDefault();
+        changePage(1);
+      } else if (e.deltaY < 0 && hasPrev) {
+        e.preventDefault();
+        changePage(-1);
+      }
+    };
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, [hasMore, hasPrev]);
 
   const handleViewDetails = (saleWithClient: Sale, client: ClientWithSale) => {
     navigate(`/sales/${saleWithClient.id}`, {
@@ -42,7 +86,7 @@ export default function SalesList({
       {isLoading ? (
         <TableSkeleton />
       ) : (
-        <div className="overflow-x-auto -mx-4 md:mx-0">
+        <div ref={containerRef} className="overflow-x-auto -mx-4 md:mx-0">
           <table className="w-full min-w-175">
             <thead className="bg-muted/50 border-b border-border">
               <tr>
@@ -55,7 +99,14 @@ export default function SalesList({
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {sales?.map((sale) => {
+              {hasPrev && (
+                <LoadMore
+                  direction="up"
+                  onClick={() => changePage(-1)}
+                  onGoToTop={() => setOffset(0)}
+                />
+              )}
+              {visibleSales?.map((sale) => {
                 const client = sale.clients;
                 return (
                   <tr key={sale.id}>
@@ -104,13 +155,16 @@ export default function SalesList({
                         >
                           {sale.status !== "pending"
                             ? "View Details"
-                            : "Review Transaction"}
+                            : "Review"}
                         </Button>
                       </span>
                     </td>
                   </tr>
                 );
               })}
+              {hasMore && (
+                <LoadMore direction="down" onClick={() => changePage(1)} />
+              )}
             </tbody>
           </table>
         </div>
