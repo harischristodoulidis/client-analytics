@@ -3,12 +3,13 @@ import type { Sale, SalesWithClient } from "./types/sales";
 
 export const fetchRecentSales = async (
   limit = 5,
+  offset = 0,
 ): Promise<SalesWithClient[]> => {
   const { data, error } = await supabase
     .from("sales")
     .select(`*, clients(name, username, email, total_spent, joinedDate)`)
     .order("edited_at", { ascending: false })
-    .limit(limit);
+    .range(offset, offset + limit - 1);
 
   if (error) throw error;
   return data;

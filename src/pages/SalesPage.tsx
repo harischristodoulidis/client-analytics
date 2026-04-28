@@ -1,7 +1,6 @@
 import { useState } from "react";
 import type {
   ClientWithSale,
-  Sale,
   SalesWithClient,
 } from "../shared/api/types/sales";
 import { useAddOrEditSale } from "../shared/hooks/useAddOrEditSale";
