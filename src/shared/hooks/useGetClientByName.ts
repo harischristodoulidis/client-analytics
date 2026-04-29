@@ -5,5 +5,6 @@ export const useGetClientByName = (params: { search: string }) => {
   return useQuery({
     queryKey: ["clients", params],
     queryFn: () => getClientByName(params),
+    enabled: !!params.search,
   });
 };

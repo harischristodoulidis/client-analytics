@@ -15,6 +15,18 @@ export const fetchRecentSales = async (
   return data;
 };
 
+export const fetchSalesByCustomer = async () => {
+  const { data, error } = await supabase.rpc("get_sales_by_customer");
+
+  if (error) throw error;
+
+  return data as {
+    name: string;
+    total_amount: number;
+    completed_count: number;
+  }[];
+};
+
 export const addSale = async (sale: Omit<Sale, "id" | "created_at">) => {
   const { data, error } = await supabase.from("sales").insert([sale]).select();
 
