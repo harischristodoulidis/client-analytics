@@ -5,6 +5,13 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes,
       refetchOnWindowFocus: false,
+      retry: (failureCount, error) => {
+        if ("status" in error) {
+          const status = (error as { status: number }).status;
+          if (status >= 400 && status < 500) return false;
+        }
+        return failureCount < 1;
+      },
     },
   },
 });

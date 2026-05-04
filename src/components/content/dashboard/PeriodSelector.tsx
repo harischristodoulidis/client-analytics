@@ -1,13 +1,6 @@
 import { useState } from "react";
 import type { DateRange } from "react-day-picker";
-import { format } from "date-fns";
-import {
-  Select,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-} from "../../ui/Select";
+import Dropdown from "../../ui/Dropdown";
 import { Popover } from "@radix-ui/react-popover";
 import { PopoverContent, PopoverTrigger } from "../../ui/Popover";
 import cn from "../../../shared/utils/cn";
@@ -67,16 +60,6 @@ export default function PeriodSelector({
       setIsCalendarOpen(false);
     }
   };
-  const getDisplayValue = () => {
-    if (selectedPeriod === "custom" && customDateRange) {
-      return `${format(customDateRange.from, "MMM dd, yyyy")} - ${format(customDateRange.to, "MMM dd, yyyy")}`;
-    }
-
-    const period = periods.find((period) => period.name === selectedPeriod);
-    const displayValue = period?.value;
-    return displayValue;
-  };
-
   const handleDateSelect = (range: DateRange | undefined) => {
     if (
       range?.from &&
@@ -94,16 +77,12 @@ export default function PeriodSelector({
 
   return (
     <div className="flex items-center gap-2">
-      <Select value={selectedPeriod} onValueChange={handleSelectChange}>
-        <SelectTrigger className="w-auto min-w-45 md:min-w-50">
-          <SelectValue>{getDisplayValue()}</SelectValue>
-        </SelectTrigger>
-        <SelectContent>
-          {periods.map((period) => (
-            <SelectItem value={period.name}>{period.value}</SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <Dropdown
+        value={selectedPeriod}
+        onChange={handleSelectChange}
+        className="w-auto min-w-45 md:min-w-50"
+        options={periods.map((p) => ({ value: p.name, label: p.value }))}
+      />
 
       {selectedPeriod === "custom" && (
         <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>

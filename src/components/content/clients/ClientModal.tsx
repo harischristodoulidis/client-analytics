@@ -1,6 +1,6 @@
 import { useActionState } from "react";
-import { X } from "lucide-react";
 import type { Client } from "../../../shared/api/types/clients";
+import Modal from "../../ui/Modal";
 import {
   initialState,
   type AddClientFormState,
@@ -55,26 +55,9 @@ export default function ClientModal({
   const labelClasses = "block text-sm font-medium mb-2";
   const inputClasses = "px-3 py-2";
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-background rounded-xl shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 md:p-6 border-b border-border">
-          <h2 className="text-lg md:text-xl font-bold">
-            {mode === "add" ? "Add New Client" : "Edit Client"}
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-muted rounded-lg transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Form */}
-        <form className="p-4 md:p-6 space-y-4" action={formAction}>
+    <Modal isOpen={isOpen} onClose={onClose} title={mode === "add" ? "Add New Client" : "Edit Client"}>
+      <form className="p-4 md:p-6 space-y-4" action={formAction}>
           <div>
             <label htmlFor="username" className={labelClasses}>
               Username <span className="text-red-500">*</span>
@@ -155,8 +138,7 @@ export default function ClientModal({
           {formState.error && (
             <p style={{ color: "red" }}>❌ {formState.error}</p>
           )}
-        </form>
-      </div>
-    </div>
+      </form>
+    </Modal>
   );
 }

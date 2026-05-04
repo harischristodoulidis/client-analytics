@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { X } from "lucide-react";
 import { useGetClientByName } from "../../../shared/hooks/useGetClientByName";
+import Modal from "../../ui/Modal";
 import useDebounse from "../../../shared/hooks/useDebounce";
 import Input from "../../ui/Input";
+import Dropdown from "../../ui/Dropdown";
 import type { Client } from "../../../shared/api/types/clients";
 import type {
   ClientWithSale,
@@ -65,13 +66,6 @@ export default function SaleModal({
     setSearchQuery(e.target.value);
   };
 
-  const handleSelectClient = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const value = e.target.value;
-    setClientId(value);
-  };
-
   const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
     setAmount(value);
@@ -87,13 +81,19 @@ export default function SaleModal({
       setError("Transaction account must me > 0");
       return;
     }
-    await onSave({
-      client_id: clientId,
-      amount: amount,
-      status: "pending",
-      date: new Date().toISOString().split("T")[0],
-      edited_at: new Date().toISOString(),
-    });
+    try {
+      await onSave({
+        client_id: clientId,
+        amount: amount,
+        status: "pending",
+        date: new Date().toISOString().split("T")[0],
+        edited_at: new Date().toISOString(),
+      });
+    } catch (err: any) {
+      setError(err.message);
+      return;
+    }
+
     setSearchClient("");
     setSearchQuery("");
     setClientId(null);
@@ -101,47 +101,28 @@ export default function SaleModal({
     onClose();
   };
 
-  if (!isOpen) return null;
-
   const selectClientContent = (clients: Client[]) => {
     if (clients.length === 0) {
       return null;
     }
 
     return (
-      <select
-        id="client"
-        onChange={handleSelectClient}
-        className="w-full border border-border rounded-lg bg-background text-foreground px-3 py-2"
-      >
-        <option value="">Select a client...</option>
-        {clients?.map((client) => (
-          <option key={client.id} value={client.id}>
-            {client.name} ({client.username})
-          </option>
-        ))}
-      </select>
+      <Dropdown
+        value={clientId ?? ""}
+        onChange={setClientId}
+        placeholder="Select a client..."
+        className="w-full"
+        options={clients.map((c) => ({
+          value: c.id,
+          label: `${c.name} (${c.username})`,
+        }))}
+      />
     );
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-background rounded-xl shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 md:p-6 border-b border-border">
-          <h2 className="text-lg md:text-xl font-bold">
-            {mode === "add" ? "Add New Transaction" : "Edit Transaction"}
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-muted rounded-lg transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Form */}
-        <form className="p-4 md:p-6 space-y-4" onSubmit={handeleSubmit}>
+    <Modal isOpen={isOpen} onClose={onClose} title={mode === "add" ? "Add New Transaction" : "Edit Transaction"}>
+      <form className="p-4 md:p-6 space-y-4" onSubmit={handeleSubmit}>
           <div>
             <label htmlFor="clientName" className={labelClasses}>
               Client <span className="text-red-500">*</span>
@@ -195,8 +176,7 @@ export default function SaleModal({
             </button>
           </div>
           {error && <p style={{ color: "red" }}>❌ {error}</p>}
-        </form>
-      </div>
-    </div>
+      </form>
+    </Modal>
   );
 }

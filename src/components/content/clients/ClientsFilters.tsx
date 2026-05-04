@@ -2,12 +2,13 @@ import { memo } from "react";
 import { Search } from "lucide-react";
 import type { ClientStatus } from "../../../shared/api/types/clients";
 import Input from "../../ui/Input";
+import Dropdown from "../../ui/Dropdown";
 
 interface ClientsFIltersProps {
   search: string;
   statusFilter: ClientStatus;
   onSearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onChangeStatus: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onChangeStatus: (value: string) => void;
 }
 
 const ClientsFilters = memo(function ClientsFilters({
@@ -28,16 +29,17 @@ const ClientsFilters = memo(function ClientsFilters({
           className="pl-10 pr-4 py-2"
         />
       </div>
-      <select
+      <Dropdown
         value={statusFilter}
-        className="px-3 md:px-4 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 min-w-35"
         onChange={onChangeStatus}
-      >
-        <option value="all">All</option>
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-        <option value="pending">Pending</option>
-      </select>
+        className="min-w-35"
+        options={[
+          { value: "all", label: "All" },
+          { value: "active", label: "Active" },
+          { value: "inactive", label: "Inactive" },
+          { value: "pending", label: "Pending" },
+        ]}
+      />
     </div>
   );
 });
