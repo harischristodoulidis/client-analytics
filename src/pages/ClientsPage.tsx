@@ -14,6 +14,7 @@ import ClientsList from "../components/content/clients/ClientsList";
 import ClientModal from "../components/content/clients/ClientModal";
 import ConfirmModal from "../components/ui/ConfirmModal";
 import { useDeleteClient } from "../shared/hooks/useDeleteClient";
+import { useToast } from "../shared/hooks/useToast";
 
 const PAGE_SIZE = 10;
 type SortDirection = "asc" | "desc";
@@ -48,6 +49,7 @@ export default function ClientsPage() {
   const { mutateAsync: addAsync } = useAddOrEditClient(addClient);
   const { mutateAsync: editAsync } = useAddOrEditClient(editClient);
   const { mutateAsync: deleteAsync } = useDeleteClient();
+  const { showToast } = useToast();
 
   const clients = data?.data ?? [];
   const totalPages = data?.total_pages ?? 0;
@@ -84,27 +86,31 @@ export default function ClientsPage() {
     setSearch(e.target.value);
   }, []);
 
-  const handleStatusFilter = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setStatusFilter(e.target.value as ClientStatus);
-    },
-    [],
-  );
+  const handleStatusFilter = useCallback((value: string) => {
+    setStatusFilter(value as ClientStatus);
+  }, []);
 
   const handleAddClient = async (clientData: any) => {
     await addAsync(clientData);
+    showToast("Client added successfully", "success");
   };
 
   const handleEditClient = async (clientData: any) => {
     if (selectedClient) {
       const { id, ...rest } = clientData;
       await editAsync({ id: selectedClient.id, ...rest });
+      showToast("Client updated successfully", "success");
     }
   };
 
   const handleDeleteClient = async () => {
     if (selectedClient) {
-      await deleteAsync({ id: selectedClient.id });
+      try {
+        await deleteAsync({ id: selectedClient.id });
+        showToast("Client deleted successfully", "success");
+      } catch (err: any) {
+        showToast(err.message || "Failed to delete client", "error");
+      }
     }
   };
 
@@ -152,7 +158,7 @@ export default function ClientsPage() {
           )}
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-border">
+        <div className="bg-background rounded-xl shadow-sm border border-border">
           <EmptyState
             message="No clients found"
             icon={<Users className="w-12 h-12" />}
@@ -194,6 +200,7 @@ export default function ClientsPage() {
         }
         confirmColor="red"
         confirmButtonText="Delete"
+        loadingText="Deleting..."
       />
     </div>
   );

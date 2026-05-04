@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { AlertTriangle } from "lucide-react";
 
-interface DeleteConfirmModalProps {
+interface ConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => Promise<void>;
@@ -8,6 +9,7 @@ interface DeleteConfirmModalProps {
   confirmParagraph: string | React.ReactNode;
   confirmColor: string;
   confirmButtonText: string;
+  loadingText: string;
 }
 
 const colorClasses: Record<
@@ -36,13 +38,18 @@ export default function ConfirmModal({
   confirmParagraph,
   confirmColor,
   confirmButtonText,
-}: DeleteConfirmModalProps) {
-  const handleConfirm = () => {
+  loadingText,
+}: ConfirmModalProps) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleConfirm = async () => {
+    setIsLoading(true);
     try {
-      onConfirm();
+      await onConfirm();
       onClose();
-    } catch (err: any) {
-      throw new Error("Something went wrong deleting the client");
+    } catch {
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -80,9 +87,10 @@ export default function ConfirmModal({
           </button>
           <button
             onClick={handleConfirm}
-            className={`px-4 py-2 ${colorClasses[confirmColor].bg} text-white rounded-lg text-sm font-medium cursor-pointer ${colorClasses[confirmColor].hover} transition-colors`}
+            disabled={isLoading}
+            className={`px-4 py-2 ${colorClasses[confirmColor].bg} text-white rounded-lg text-sm font-medium cursor-pointer ${colorClasses[confirmColor].hover} transition-colors disabled:opacity-60 disabled:cursor-not-allowed`}
           >
-            {confirmButtonText}
+            {isLoading ? loadingText : confirmButtonText}
           </button>
         </div>
       </div>

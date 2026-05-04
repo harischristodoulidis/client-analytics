@@ -149,7 +149,6 @@ export default function TransactionDetailsPage() {
         </ClientDetailsCard>
       </div>
 
-      {/* Delete Client Modal */}
       <ConfirmModal
         isOpen={isConfirmModalOpen}
         onClose={() => setIsConfirmModalOpen(false)}
@@ -158,6 +157,9 @@ export default function TransactionDetailsPage() {
         confirmParagraph={`Are you sure you want to ${selectedSaleStatus === "completed" ? `approve` : `reject`} this transaction?`}
         confirmColor="yellow"
         confirmButtonText="Done"
+        loadingText={
+          selectedSaleStatus === "completed" ? "Approving..." : "Rejecting..."
+        }
       />
     </div>
   );

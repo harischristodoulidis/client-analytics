@@ -1,4 +1,3 @@
-import { supabase } from "../utils/supabase";
 import type { ChartDataPoint } from "./types/ChartDataPoint";
 import type { KPIData } from "./types/kpisApi";
 import {

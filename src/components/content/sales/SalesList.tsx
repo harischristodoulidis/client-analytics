@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { BadgeDollarSign } from "lucide-react";
 import type {
   ClientWithSale,
   Sale,
@@ -11,6 +12,7 @@ import { salesStatusVariants } from "../../../styles/variants/transactionStatusV
 import SaleActionsMenu from "./SaleActionsMenu";
 import Button from "../../ui/Button";
 import LoadMore from "./LoadMore";
+import EmptyState from "../../../shared/components/EmptyState";
 
 const thClasses =
   "text-left px-4 md:px-6 py-2 md:py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider";
@@ -85,7 +87,7 @@ export default function SalesList({
       </div>
       {isLoading ? (
         <TableSkeleton />
-      ) : (
+      ) : visibleSales && visibleSales.length > 0 ? (
         <div ref={containerRef} className="overflow-x-auto -mx-4 md:mx-0">
           <table className="w-full min-w-175">
             <thead className="bg-muted/50 border-b border-border">
@@ -167,6 +169,13 @@ export default function SalesList({
               )}
             </tbody>
           </table>
+        </div>
+      ) : (
+        <div className="overflow-x-auto -mx-4 md:mx-0">
+          <EmptyState
+            message="No transactions found"
+            icon={<BadgeDollarSign className="w-12 h-12" />}
+          />
         </div>
       )}
     </div>

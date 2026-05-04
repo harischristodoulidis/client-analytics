@@ -6,6 +6,7 @@ import type {
 import { useAddOrEditSale } from "../shared/hooks/useAddOrEditSale";
 import { addSale, editSale } from "../shared/api/salesApi";
 import { useDeleteSale } from "../shared/hooks/useDeleteSale";
+import { useToast } from "../shared/hooks/useToast";
 import SaleModal from "../components/content/sales/SaleModal";
 import SalesChart from "../components/content/sales/SalesChart";
 import SalesHeader from "../components/content/sales/SalesHeader";
@@ -25,21 +26,29 @@ export default function SalesPage() {
   const { mutateAsync: addAsync } = useAddOrEditSale(addSale);
   const { mutateAsync: editsync } = useAddOrEditSale(editSale);
   const { mutateAsync: deleteAsync } = useDeleteSale();
+  const { showToast } = useToast();
 
   const handleAddSale = async (saleData: any) => {
     await addAsync(saleData);
+    showToast("Transaction added successfully", "success");
   };
 
   const handleEditSale = async (saleData: any) => {
     if (selectedSale) {
       const { id, ...rest } = saleData;
       await editsync({ id: selectedSale.id, ...rest });
+      showToast("Transaction updated successfully", "success");
     }
   };
 
   const handleDeleteSale = async () => {
     if (selectedSale) {
-      await deleteAsync({ id: selectedSale.id });
+      try {
+        await deleteAsync({ id: selectedSale.id });
+        showToast("Transaction deleted successfully", "success");
+      } catch (err: any) {
+        showToast(err.message || "Failed to delete transaction", "error");
+      }
     }
   };
 
@@ -88,7 +97,7 @@ export default function SalesPage() {
         }
       />
 
-      {/* Delete Client Modal */}
+      {/* Delete Sale Modal */}
       <ConfirmModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
@@ -97,6 +106,7 @@ export default function SalesPage() {
         confirmParagraph="Are you sure you want to delete this transaction? This action cannot be undone."
         confirmColor="red"
         confirmButtonText="Delete"
+        loadingText="Deleting..."
       />
     </div>
   );
