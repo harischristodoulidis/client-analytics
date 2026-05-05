@@ -5,13 +5,12 @@ interface DropdownOption {
   label: string;
 }
 
-interface DropdownProps {
+interface DropdownProps
+  extends Omit<React.ComponentProps<"select">, "onChange"> {
   options: DropdownOption[];
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  className?: string;
-  disabled?: boolean;
 }
 
 export default function Dropdown({
@@ -21,9 +20,11 @@ export default function Dropdown({
   placeholder,
   className,
   disabled,
+  ...props
 }: DropdownProps) {
   return (
     <select
+      {...props}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       disabled={disabled}

@@ -25,7 +25,7 @@ export default function TransactionDetailsPage() {
   );
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
-  const { mutateAsync: editsync } = useAddOrEditSale(editSale);
+  const { mutateAsync: editAsync } = useAddOrEditSale(editSale);
 
   const labelClasses = "text-sm text-muted-foreground mb-1";
 
@@ -64,7 +64,7 @@ export default function TransactionDetailsPage() {
       status: selectedSaleStatus,
     };
     try {
-      await editsync({ next: editData, prev: saleWithClient });
+      await editAsync({ next: editData, prev: saleWithClient });
       setStateStatus(selectedSaleStatus);
     } catch (error) {
       throw error;
