@@ -1,12 +1,12 @@
-import type { Client } from "../../../shared//api/types/clients";
-import { clientStatusVariants } from "../../../styles/variants/clientStatusVariants";
+import type { Client } from "../../shared/api/types/clients";
+import { clientStatusVariants } from "../../styles/variants/clientStatusVariants";
 
 interface ClientDetailsHeaderProps {
   username?: string;
   client: Client;
 }
 
-export default function ClientDetailsHeader({
+export default function DetailsHeader({
   username,
   client,
 }: ClientDetailsHeaderProps) {

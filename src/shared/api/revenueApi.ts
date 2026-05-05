@@ -1,5 +1,5 @@
 import type { ChartDataPoint } from "./types/ChartDataPoint";
-import type { KPIData } from "./types/kpisApi";
+import type { KPIData } from "./types/KPIData";
 import {
   subDays,
   subMonths,
@@ -96,7 +96,7 @@ const generateDailyRevenueData = (): Array<{ date: Date; revenue: number }> => {
 const allDailyRevenueData = generateDailyRevenueData();
 
 // Mock KPI data
-export const fetchMockKPIs = (
+export const fetchMockKPIs = async (
   period: string | { from: Date; to: Date } = "1y",
 ): Promise<KPIData[]> => {
   const filter = getPeriodFilter(period);

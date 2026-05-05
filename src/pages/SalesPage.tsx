@@ -36,7 +36,10 @@ export default function SalesPage() {
   const handleEditSale = async (saleData: any) => {
     if (selectedSale) {
       const { id, ...rest } = saleData;
-      await editsync({ id: selectedSale.id, ...rest });
+      await editsync({
+        next: { id: selectedSale.id, ...rest },
+        prev: selectedSale,
+      });
       showToast("Transaction updated successfully", "success");
     }
   };
@@ -44,7 +47,10 @@ export default function SalesPage() {
   const handleDeleteSale = async () => {
     if (selectedSale) {
       try {
-        await deleteAsync({ id: selectedSale.id });
+        await deleteAsync({
+          id: selectedSale.id,
+          client_id: selectedSale.client_id,
+        });
         showToast("Transaction deleted successfully", "success");
       } catch (err: any) {
         showToast(err.message || "Failed to delete transaction", "error");

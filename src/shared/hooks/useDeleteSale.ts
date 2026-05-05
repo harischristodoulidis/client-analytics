@@ -8,6 +8,7 @@ export const useDeleteSale = () => {
     mutationFn: deleteSale,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["sales"] });
+      queryClient.invalidateQueries({ queryKey: ["activity"] });
     },
   });
 };

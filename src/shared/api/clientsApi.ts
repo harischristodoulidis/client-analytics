@@ -1,4 +1,5 @@
 import { supabase } from "../utils/supabase";
+import { safeLog } from "./activityLogApi";
 import type { Client, PaginatedResponse, ClientStatus } from "./types/clients";
 
 export interface ClientParams {
@@ -59,10 +60,23 @@ export const addClient = async (client: Omit<Client, "id">) => {
     .select();
 
   if (error) throw error;
+
+  const created = data?.[0] as Client | undefined;
+  if (created) {
+    await safeLog({ client_id: created.id, action: "client_created" });
+  }
+
   return data;
 };
 
-export const editClient = async ({ id, ...payload }: Client) => {
+export const editClient = async ({
+  next,
+  prev,
+}: {
+  next: Client;
+  prev: Client;
+}) => {
+  const { id, ...payload } = next;
   const { data, error } = await supabase
     .from("clients")
     .update(payload)
@@ -70,6 +84,17 @@ export const editClient = async ({ id, ...payload }: Client) => {
     .select();
 
   if (error) throw error;
+
+  if (prev.status !== next.status) {
+    await safeLog({
+      client_id: id,
+      action: "client_status_changed",
+      metadata: { from: prev.status, to: next.status },
+    });
+  } else {
+    await safeLog({ client_id: id, action: "client_updated" });
+  }
+
   return data;
 };
 
