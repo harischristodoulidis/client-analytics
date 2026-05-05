@@ -1,7 +1,7 @@
 import { Calendar, DollarSign, Mail } from "lucide-react";
 import { useParams, useLocation, useNavigate } from "react-router";
 import type { Client } from "../shared/api/types/clients";
-import DetailsHeader from "../components/ui/DetailsHeader";
+import ClientDetailsHeader from "../components/ui/ClientDetailsHeader";
 import DetailsCard from "../components/ui/DetailsCard";
 import ClientRecentActivity from "../components/content/clients/ClientRecentActivity";
 
@@ -23,7 +23,7 @@ export default function ClientDetailsPage() {
       >
         Go Back
       </button>
-      <DetailsHeader username={clientUsername} client={client} />
+      <ClientDetailsHeader username={clientUsername} client={client} />
 
       {/* Details Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">

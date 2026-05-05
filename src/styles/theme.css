@@ -12,6 +12,7 @@
   --muted-foreground: #717182;
   --accent: #e9ebef;
   --destructive: #d4183d;
+  --approving: #006400;
   --border: rgba(0, 0, 0, 0.1);
   --link: #0008ff;
   --input: transparent;
@@ -99,6 +100,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-approving: var(--approving);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-link: var(--link);

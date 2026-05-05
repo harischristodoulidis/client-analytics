@@ -5,12 +5,10 @@ import {
 } from "@tanstack/react-query";
 import type { Client } from "../api/types/clients";
 
-export const useAddOrEditClient = <TVars,>(
-  fn: MutationFunction<Client[], TVars>,
-) => {
+export const useAddOrEditClient = <T>(fn: MutationFunction<Client[], T>) => {
   const queryClient = useQueryClient();
 
-  return useMutation<Client[], Error, TVars>({
+  return useMutation<Client[], Error, T>({
     mutationFn: fn,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["clients"] });
