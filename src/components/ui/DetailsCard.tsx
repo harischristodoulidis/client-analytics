@@ -3,7 +3,7 @@ interface ClientDetailsCardProps {
   children: React.ReactNode;
 }
 
-export default function ClientDetailsCard({
+export default function DetailsCard({
   detailsContext,
   children,
 }: ClientDetailsCardProps) {

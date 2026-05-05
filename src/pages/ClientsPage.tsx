@@ -98,7 +98,10 @@ export default function ClientsPage() {
   const handleEditClient = async (clientData: any) => {
     if (selectedClient) {
       const { id, ...rest } = clientData;
-      await editAsync({ id: selectedClient.id, ...rest });
+      await editAsync({
+        next: { id: selectedClient.id, ...rest },
+        prev: selectedClient,
+      });
       showToast("Client updated successfully", "success");
     }
   };

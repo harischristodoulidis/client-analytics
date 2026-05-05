@@ -11,7 +11,7 @@ import { Link, useLocation, useNavigate } from "react-router";
 import { editSale } from "../shared/api/salesApi";
 import type { Sale, SaleStatus } from "../shared/api/types/sales";
 import { useAddOrEditSale } from "../shared/hooks/useAddOrEditSale";
-import ClientDetailsCard from "../components/content/clientDetails/ClientDetailsCard";
+import DetailsCard from "../components/ui/DetailsCard";
 import ConfirmModal from "../components/ui/ConfirmModal";
 
 export default function TransactionDetailsPage() {
@@ -64,7 +64,7 @@ export default function TransactionDetailsPage() {
       status: selectedSaleStatus,
     };
     try {
-      await editsync(editData);
+      await editsync({ next: editData, prev: saleWithClient });
       setStateStatus(selectedSaleStatus);
     } catch (error) {
       throw error;
@@ -84,7 +84,7 @@ export default function TransactionDetailsPage() {
 
       {/* Details Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-        <ClientDetailsCard detailsContext="Transaction Information">
+        <DetailsCard detailsContext="Transaction Information">
           <div className="flex items-start gap-3">
             <div className="shrink-0 w-10 h-10 rounded-lg flex items-center justify-center">
               <User className="w-5 h-5 text-primary" />
@@ -146,7 +146,7 @@ export default function TransactionDetailsPage() {
               </select>
             )}
           </div>
-        </ClientDetailsCard>
+        </DetailsCard>
       </div>
 
       <ConfirmModal

@@ -1,4 +1,5 @@
 import { supabase } from "../utils/supabase";
+import { safeLog } from "./activityLogApi";
 import type { Sale, SalesWithClient } from "./types/sales";
 
 export const fetchRecentSales = async (
@@ -31,10 +32,27 @@ export const addSale = async (sale: Omit<Sale, "id" | "created_at">) => {
   const { data, error } = await supabase.from("sales").insert([sale]).select();
 
   if (error) throw error;
+
+  const created = data?.[0] as Sale | undefined;
+  if (created) {
+    await safeLog({
+      client_id: created.client_id,
+      sale_id: created.id,
+      action: "sale_created",
+    });
+  }
+
   return data;
 };
 
-export const editSale = async ({ id, ...payload }: Sale) => {
+export const editSale = async ({
+  next,
+  prev,
+}: {
+  next: Sale;
+  prev: Sale;
+}) => {
+  const { id, ...payload } = next;
   const { data, error } = await supabase
     .from("sales")
     .update({ ...payload, edited_at: new Date().toISOString() })
@@ -42,10 +60,31 @@ export const editSale = async ({ id, ...payload }: Sale) => {
     .select();
 
   if (error) throw error;
+
+  if (prev.status !== next.status) {
+    await safeLog({
+      client_id: next.client_id,
+      sale_id: id,
+      action: "sale_status_changed",
+      metadata: { from: prev.status, to: next.status },
+    });
+  } else {
+    await safeLog({
+      client_id: next.client_id,
+      sale_id: id,
+      action: "sale_updated",
+    });
+  }
+
   return data;
 };
 
-export const deleteSale = async ({ id }: Pick<Sale, "id">) => {
+export const deleteSale = async ({
+  id,
+  client_id,
+}: Pick<Sale, "id" | "client_id">) => {
+  await safeLog({ client_id, sale_id: id, action: "sale_deleted" });
+
   const { error } = await supabase.from("sales").delete().eq("id", id);
 
   if (error) throw error;

@@ -1,8 +1,9 @@
-import { Activity, Calendar, DollarSign, Mail } from "lucide-react";
+import { Calendar, DollarSign, Mail } from "lucide-react";
 import { useParams, useLocation, useNavigate } from "react-router";
 import type { Client } from "../shared/api/types/clients";
-import ClientDetailsHeader from "../components/content/clientDetails/ClientDetailsHeader";
-import ClientDetailsCard from "../components/content/clientDetails/ClientDetailsCard";
+import DetailsHeader from "../components/ui/DetailsHeader";
+import DetailsCard from "../components/ui/DetailsCard";
+import ClientRecentActivity from "../components/content/clients/ClientRecentActivity";
 
 export default function ClientDetailsPage() {
   const { clientUsername } = useParams();
@@ -22,12 +23,12 @@ export default function ClientDetailsPage() {
       >
         Go Back
       </button>
-      <ClientDetailsHeader username={clientUsername} client={client} />
+      <DetailsHeader username={clientUsername} client={client} />
 
       {/* Details Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         {/* Contact Information */}
-        <ClientDetailsCard detailsContext="Contact Information">
+        <DetailsCard detailsContext="Contact Information">
           <div className="flex items-start gap-3">
             <div className="shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
               <Mail className="w-5 h-5 text-primary" />
@@ -58,10 +59,10 @@ export default function ClientDetailsPage() {
               </p>
             </div>
           </div>
-        </ClientDetailsCard>
+        </DetailsCard>
 
         {/* Financial Information */}
-        <ClientDetailsCard detailsContext="Financial Information">
+        <DetailsCard detailsContext="Financial Information">
           <div className="flex items-start gap-3">
             <div className="shrink-0 w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
               <DollarSign className="w-5 h-5 text-blue-600" />
@@ -73,19 +74,12 @@ export default function ClientDetailsPage() {
               </p>
             </div>
           </div>
-        </ClientDetailsCard>
+        </DetailsCard>
 
         {/* Activity Section */}
-
-        <ClientDetailsCard detailsContext="Recent Activity">
-          <div className="flex items-center gap-2 mb-4">
-            <Activity className="w-5 h-5 text-muted-foreground" />
-            <h2 className="text-lg font-semibold">Recent Activity</h2>
-          </div>
-          <div className="text-sm text-muted-foreground">
-            No recent activity to display.
-          </div>
-        </ClientDetailsCard>
+        <DetailsCard detailsContext="Recent Activity">
+          <ClientRecentActivity clientId={client.id} />
+        </DetailsCard>
       </div>
     </div>
   );
