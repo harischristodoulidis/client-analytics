@@ -6,16 +6,16 @@ import type { PieEntry } from "../../../shared/api/types/PieEntry";
 const AMOUNT_LIMIT = 250;
 
 const COLORS = [
-  "#3B82F6",
-  "#10B981",
-  "#F59E0B",
-  "#EF4444",
-  "#8B5CF6",
-  "#06B6D4",
-  "#F97316",
-  "#84CC16",
-  "#EC4899",
-  "#14B8A6",
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+  "var(--chart-6)",
+  "var(--chart-7)",
+  "var(--chart-8)",
+  "var(--chart-9)",
+  "var(--chart-10)",
 ];
 
 const CustomTooltip = ({
@@ -96,7 +96,7 @@ export default function SalesChart() {
     return entries.map((entry, index) => ({
       ...entry,
       percentage: total > 0 ? ((entry.value / total) * 100).toFixed(1) : "0.0",
-      fill: entry.name === "Others" ? "#A78BFA" : COLORS[index % COLORS.length],
+      fill: entry.name === "Others" ? "var(--chart-other)" : COLORS[index % COLORS.length],
     }));
   })();
 

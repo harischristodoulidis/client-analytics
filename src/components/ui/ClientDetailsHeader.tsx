@@ -82,7 +82,7 @@ export default function ClientDetailsHeader({
               <div>
                 <Button
                   className="cursor-pointer"
-                  variant={`${status === "active" ? "destructive" : "approving"}`}
+                  variant={`${status === "active" ? "destructive" : "success"}`}
                   onClick={() => handleChangeStatus()}
                 >
                   {status === "active" ? `Deactivate` : `Activate`}

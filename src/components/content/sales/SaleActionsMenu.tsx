@@ -52,7 +52,7 @@ export default function SaleActionsMenu({
           </button>
           <button
             onClick={handleDelete}
-            className="w-full px-4 py-2 text-left text-sm hover:bg-muted transition-colors flex items-center gap-2 text-red-600"
+            className="w-full px-4 py-2 text-left text-sm hover:bg-muted transition-colors flex items-center gap-2 text-destructive"
           >
             <Trash2 className="w-4 h-4" />
             Delete

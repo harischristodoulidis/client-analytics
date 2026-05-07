@@ -1,5 +1,5 @@
 const rowBtnClasses =
-  "flex justify-center items-center py-2 px-3 text-sm text-blue-500/60 hover:text-blue-500 transition-colors cursor-pointer";
+  "flex justify-center items-center py-2 px-3 text-sm text-info/60 hover:text-info transition-colors cursor-pointer";
 
 export default function LoadMore({
   direction,
@@ -11,7 +11,7 @@ export default function LoadMore({
   onGoToTop?: () => void;
 }) {
   return (
-    <tr className="bg-blue-500/5">
+    <tr className="bg-info/5">
       <td colSpan={6} className="p-0">
         <div className="flex justify-center items-center gap-2">
           <button onClick={onClick} className={rowBtnClasses}>
@@ -19,7 +19,7 @@ export default function LoadMore({
           </button>
           {onGoToTop && (
             <>
-              <span className="text-blue-500/20">|</span>
+              <span className="text-info/20">|</span>
               <button onClick={onGoToTop} className={rowBtnClasses}>
                 ↑↑ Go to top
               </button>

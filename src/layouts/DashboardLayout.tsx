@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  Bell,
   DollarSign,
   LayoutDashboard,
   Menu,
+  Moon,
   Search,
+  Sun,
   Users,
   X,
 } from "lucide-react";
 import { NavLink, Outlet } from "react-router";
+import Tooltip from "../components/ui/Tooltip";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
@@ -16,6 +18,19 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    const storedTheme = localStorage.getItem("darkMode");
+    return storedTheme ? JSON.parse(storedTheme) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("darkMode", JSON.stringify(darkMode));
+    document.documentElement.classList.toggle("dark", darkMode);
+  }, [darkMode]);
+
+  const handleChangeTheme = () => {
+    setDarkMode((prev) => !prev);
+  };
 
   const menuItems = [
     { path: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -62,7 +77,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   return `flex items-center gap-3 px-3 py-2 mb-1 rounded-lg transition-colors ${
                     isActive
                       ? "bg-amber-800 text-sidebar-accent-foreground"
-                      : "text-[#CBD5E1] hover:bg-amber-800 hover:text-sidebar-accent-foreground"
+                      : "text-sidebar-foreground hover:bg-amber-800 hover:text-sidebar-accent-foreground"
                   }`;
                 }}
               >
@@ -75,7 +90,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       </aside>
 
       <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
-        <header className="h-16 bg-white border-b border-[#E5E7EB] flex items-center justify-between px-4 md:px-6">
+        <header className="h-16 bg-background border-b border-border flex items-center justify-between px-4 md:px-6">
           <div className="flex items-center gap-4">
             <button
               onClick={() => setMobileMenuOpen(true)}
@@ -89,9 +104,19 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <button className="md:hidden p-2 hover:bg-muted rounded-lg transition-colors">
               <Search className="w-5 h-5 text-muted-foreground" />
             </button>
-            <button className="p-2 hover:bg-muted rounded-lg transition-colors">
+            {/* Commented for now. To be implemented in a future feature */}
+            {/* <button className="p-2 hover:bg-muted rounded-lg transition-colors">
               <Bell className="w-5 h-5 text-muted-foreground" />
-            </button>
+            </button> */}
+            {!darkMode ? (
+              <Tooltip content="Switch to dark mode" position="left">
+                <Moon className="cursor-pointer" onClick={handleChangeTheme} />
+              </Tooltip>
+            ) : (
+              <Tooltip content="Switch to light mode" position="left">
+                <Sun className="cursor-pointer" onClick={handleChangeTheme} />
+              </Tooltip>
+            )}
           </div>
         </header>
         <main className="flex-1 overflow-auto p-4 md:p-6">
