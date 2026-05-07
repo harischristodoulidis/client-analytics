@@ -13,7 +13,7 @@ export default function ClientsHeader({ onOpenModal }: ClientsHeaderProps) {
         onClick={onOpenModal}
       >
         <Plus className="w-4 h-4" />
-        <span className="hidden sm:inline">Add Client</span>
+        <span className="hidden sm:inline cursor-pointer">Add Client</span>
         <span className="sm:hidden">Add</span>
       </button>
     </div>

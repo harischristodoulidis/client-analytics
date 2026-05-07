@@ -121,61 +121,65 @@ export default function SaleModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={mode === "add" ? "Add New Transaction" : "Edit Transaction"}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={mode === "add" ? "Add New Transaction" : "Edit Transaction"}
+    >
       <form className="p-4 md:p-6 space-y-4" onSubmit={handeleSubmit}>
-          <div>
-            <label htmlFor="clientName" className={labelClasses}>
-              Client <span className="text-red-500">*</span>
-            </label>
-            <Input
-              type="text"
-              id="clientName"
-              name="clientName"
-              required
-              className={inputClasses}
-              placeholder="Enter client name or username"
-              value={searchClient}
-              onChange={handleClientSearch}
-            />
-            {clientsLoading && <p>Loading clients...</p>}
-            {searchClient && searchQuery && clients && (
-              <div className="mt-2">{selectClientContent(clients)}</div>
-            )}
-          </div>
-          <div>
-            <label htmlFor="clientName" className={labelClasses}>
-              Amount <span className="text-red-500">*</span>
-            </label>
-            <Input
-              type="number"
-              id="amount"
-              name="amount"
-              min="0"
-              step="0.01"
-              value={amount ?? 0}
-              className={inputClasses}
-              placeholder="0.00"
-              onChange={handleChangeAmount}
-            />
-          </div>
+        <div>
+          <label htmlFor="clientName" className={labelClasses}>
+            Client <span className="text-destructive">*</span>
+          </label>
+          <Input
+            type="text"
+            id="clientName"
+            name="clientName"
+            required
+            className={inputClasses}
+            placeholder="Enter client name or username"
+            value={searchClient}
+            onChange={handleClientSearch}
+          />
+          {clientsLoading && <p>Loading clients...</p>}
+          {searchClient && searchQuery && clients && (
+            <div className="mt-2">{selectClientContent(clients)}</div>
+          )}
+        </div>
+        <div>
+          <label htmlFor="clientName" className={labelClasses}>
+            Amount <span className="text-destructive">*</span>
+          </label>
+          <Input
+            type="number"
+            id="amount"
+            name="amount"
+            min="0"
+            step="0.01"
+            value={amount ?? 0}
+            className={inputClasses}
+            placeholder="0.00"
+            onChange={handleChangeAmount}
+          />
+        </div>
 
-          {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 border border-border rounded-lg text-sm font-medium hover:bg-muted transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
-            >
-              {mode === "add" ? "Add Transaction" : "Save Changes"}
-            </button>
-          </div>
-          {error && <p style={{ color: "red" }}>❌ {error}</p>}
+        {/* Actions */}
+        <div className="flex items-center justify-end gap-3 pt-4">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 border border-border rounded-lg text-sm font-medium cursor-pointer hover:bg-muted transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium cursor-pointer hover:bg-primary/90 transition-colors"
+          >
+            {mode === "add" ? "Add Transaction" : "Save Changes"}
+          </button>
+        </div>
+        {error && <p className="text-destructive">❌ {error}</p>}
       </form>
     </Modal>
   );

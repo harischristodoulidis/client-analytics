@@ -14,19 +14,21 @@ interface ConfirmModalProps {
 
 const colorClasses: Record<
   string,
-  { bgIcon: string; bg: string; text: string; hover: string }
+  { bgIcon: string; bg: string; fg: string; text: string; hover: string }
 > = {
   red: {
-    bgIcon: "bg-red-100",
-    bg: "bg-red-800",
-    text: "text-red-700",
-    hover: "hover:bg-red-700",
+    bgIcon: "bg-destructive/15",
+    bg: "bg-destructive",
+    fg: "text-destructive-foreground",
+    text: "text-destructive",
+    hover: "hover:bg-destructive/90",
   },
   yellow: {
-    bgIcon: "bg-yellow-100",
-    bg: "bg-yellow-800",
-    text: "text-yellow-700",
-    hover: "hover:bg-yellow-700",
+    bgIcon: "bg-warning/15",
+    bg: "bg-warning",
+    fg: "text-warning-foreground",
+    text: "text-warning",
+    hover: "hover:bg-warning/90",
   },
 };
 
@@ -57,7 +59,7 @@ export default function ConfirmModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-md">
+      <div className="bg-background rounded-xl shadow-lg w-full max-w-md">
         {/* Content */}
         <div className="p-6">
           <div className="flex items-start gap-4">
@@ -81,14 +83,14 @@ export default function ConfirmModal({
         <div className="flex items-center justify-end gap-3 px-6 py-4 bg-muted/30 border-t border-border rounded-b-xl">
           <button
             onClick={onClose}
-            className="px-4 py-2 border border-border rounded-lg text-sm font-medium cursor-pointer hover:bg-white transition-colors"
+            className="px-4 py-2 border border-border rounded-lg text-sm font-medium cursor-pointer hover:bg-background transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleConfirm}
             disabled={isLoading}
-            className={`px-4 py-2 ${colorClasses[confirmColor].bg} text-white rounded-lg text-sm font-medium cursor-pointer ${colorClasses[confirmColor].hover} transition-colors disabled:opacity-60 disabled:cursor-not-allowed`}
+            className={`px-4 py-2 ${colorClasses[confirmColor].bg} ${colorClasses[confirmColor].fg} rounded-lg text-sm font-medium cursor-pointer ${colorClasses[confirmColor].hover} transition-colors disabled:opacity-60 disabled:cursor-not-allowed`}
           >
             {isLoading ? loadingText : confirmButtonText}
           </button>

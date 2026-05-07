@@ -34,7 +34,7 @@ export default function RevenueChart({ period }: RevenueChartProps) {
             >
               <CartesianGrid
                 strokeDasharray="3 3"
-                stroke="#E5E7EB"
+                stroke="var(--border)"
                 horizontal={true}
                 vertical={true}
               />
@@ -46,8 +46,8 @@ export default function RevenueChart({ period }: RevenueChartProps) {
               <YAxis tick={{ fontSize: 11 }} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "white",
-                  border: "1px solid #E5E7EB",
+                  backgroundColor: "var(--background)",
+                  border: "1px solid var(--border)",
                   borderRadius: "8px",
                   fontSize: "12px",
                 }}
@@ -55,9 +55,9 @@ export default function RevenueChart({ period }: RevenueChartProps) {
               <Line
                 type="monotone"
                 dataKey="revenue"
-                stroke="#3B82F6"
+                stroke="var(--chart-1)"
                 strokeWidth={2}
-                dot={{ fill: "#3B82F6", r: 3 }}
+                dot={{ fill: "var(--chart-1)", r: 3 }}
                 activeDot={{ r: 5 }}
                 isAnimationActive={false}
               />

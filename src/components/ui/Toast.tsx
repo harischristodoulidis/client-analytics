@@ -12,15 +12,15 @@ interface ToastProps {
 }
 
 const ICONS: Record<ToastType, React.ReactNode> = {
-  success: <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />,
-  error: <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />,
-  info: <Info className="w-5 h-5 text-blue-500 shrink-0" />,
+  success: <CheckCircle className="w-5 h-5 text-success shrink-0" />,
+  error: <AlertCircle className="w-5 h-5 text-destructive shrink-0" />,
+  info: <Info className="w-5 h-5 text-info shrink-0" />,
 };
 
 const BORDER_ACCENT: Record<ToastType, string> = {
-  success: "border-l-green-500",
-  error: "border-l-red-500",
-  info: "border-l-blue-500",
+  success: "border-l-success",
+  error: "border-l-destructive",
+  info: "border-l-info",
 };
 
 export default function Toast({

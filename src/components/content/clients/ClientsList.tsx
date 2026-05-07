@@ -84,7 +84,7 @@ export default function ClientsList({
                   className={`inline-flex px-2 py-1 text-xs font-medium rounded-md ${clientStatusVariants[client.status]},
                         )}`}
                 >
-                  {client.status}
+                  {client.status.toLocaleUpperCase()}
                 </span>
               </td>
               <td className={tdClasses}>
